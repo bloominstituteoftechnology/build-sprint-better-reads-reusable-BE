@@ -7,6 +7,7 @@ module.exports = {
     connection: {
       filename: './betterReads.db3'
     },
+    useNullAsDefault: true,
     pool:
     {
       afterCreate: (conn, done) =>
