@@ -24,8 +24,8 @@ router.post('/register', (req, res) =>
                         })
                     .catch(error =>
                         {
-                            // res.status(500).json({ errorMessage: `Internal Error: Could not register user` })
-                            res.status(500).json(error)
+                            res.status(500).json({ errorMessage: `Internal Error: Could not register user` })
+                            // res.status(500).json(error)
                         })
             })
         })
