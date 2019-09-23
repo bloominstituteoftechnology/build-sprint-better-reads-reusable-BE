@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const Users = require('./authModel')
+const Users = require('../auth/authModel')
 const restricted = require('../restricted-middleware/restricted')
 const cors = require('cors')
 
@@ -9,3 +9,5 @@ router.get('/', restricted, (req, res) =>
 {
     res.status(200).json({message: 'cors no problem?'})
 })
+
+module.exports = router
