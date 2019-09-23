@@ -2,6 +2,9 @@ const router = require('express').Router()
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Users = require('./authModel')
+const cors = require('cors')
+
+router.use(cors())
 
 router.post('/register', (req, res) =>
 {
