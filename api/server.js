@@ -4,14 +4,17 @@ const cors = require('cors')
 const swaggerUi = require('swagger-ui-express')
 const swaggerDocument = require('../swagger.json')
 const authRouter = require('../auth/authRouter')
+const userRouter = require('../user/userRouter')
+
 
 const server = express()
+server.use(cors())
 
 server.use(helmet())
 server.use(express.json())
-server.use(cors())
 server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 server.use('/api/auth', authRouter)
+server.use('/api/user', userRouter)
 
 
 
