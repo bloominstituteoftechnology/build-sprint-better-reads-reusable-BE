@@ -38,6 +38,22 @@
                 {
                     "type": "string"
                 },
+                "password":
+                {
+                    "type": "string"
+                }
+
+            }
+        },
+        "returned-user":
+        {
+            "type": "object",
+            "properties":
+            {
+                "username":
+                {
+                    "type": "string"
+                },
                 "id":
                 {
                     "type": "integer"
@@ -57,6 +73,22 @@
                     "Register"
                 ],
                 "summary": "Register a user for the app",
+                "parameters":
+                [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "username and password for new user",
+                        "schema": {
+                            "$ref": "#/definitions/user"
+                        },
+                        "required": "true"
+                    }
+                ],
+                "produces":
+                [
+                    "application/json"
+                ],
                 "responses":
                 {
                     "201":
@@ -64,7 +96,39 @@
                         "description": "Created",
                         "schema": 
                         {
-                            "$ref": "#/definitions/user"
+                            "$ref": "#/definitions/returned-user"
+                        }
+                    },
+                    "500":
+                    {
+                        "description": "Internal Error",
+                        "schema": 
+                        {
+                            "type": "object",
+                            "properties":
+                            {
+                                "errorMessage":
+                                {
+                                    "type": "string",
+                                    "value": "Internal Error: Could not register user"
+                                }
+                            }
+                        }
+                    },
+                    "400":
+                    {
+                        "description": "User Error",
+                        "schema": 
+                        {
+                            "type": "object",
+                            "properties":
+                            {
+                                "errorMessage":
+                                {
+                                    "type": "string",
+                                    "value": "Missing username or password"
+                                }
+                            }
                         }
                     }
                 }
@@ -79,6 +143,22 @@
                 [
                     "Login"
                 ],
+                "parameters":
+                [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "username and password for registered user",
+                        "schema": {
+                            "$ref": "#/definitions/user"
+                        },
+                        "required": "true"
+                    }
+                ],
+                "produces":
+                [
+                    "application/json"
+                ],
                 "summary": "Log a user into the app",
                 "responses":
                 {
@@ -89,9 +169,40 @@
                         {
                             "$ref": "#/definitions/jwt"
                         }
+                    },
+                    "500":
+                    {
+                        "description": "Internal Error",
+                        "schema": 
+                        {
+                            "type": "object",
+                            "properties":
+                            {
+                                "errorMessage":
+                                {
+                                    "type": "string",
+                                    "value": "Internal Error: Could not login"
+                                }
+                            }
+                        }
+                    },
+                    "400":
+                    {
+                        "description": "User Error",
+                        "schema": 
+                        {
+                            "type": "object",
+                            "properties":
+                            {
+                                "errorMessage":
+                                {
+                                    "type": "string",
+                                    "value": "Missing username or password"
+                                }
+                            }
+                        }
                     }
                 }
-                
             }
         }
     }
