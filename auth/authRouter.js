@@ -70,7 +70,20 @@ router.post('/register', (req, res) =>
                 Users.add({username, password: hash})
                     .then(response =>
                         {
-                            res.status(201).json({ id: response.id, username: response.username })
+                            Users.findBy({ username: response.username }).first()
+                            .then(user =>
+                                {
+                                    console.log(user)
+                                    bcryptjs.compare(password, user.password, function(err, response)
+                                    {
+                                        if(response)
+                                        {
+                                            const token = generateToken(user)
+                                            res.status(201).json({ id: user.id, username: user.username, token: token })
+                                        }
+                                        else res.status(401).json({ errorMessage: 'Invalid Credentials' })
+                                    })
+                                })
                         })
                     .catch(error =>
                         {
