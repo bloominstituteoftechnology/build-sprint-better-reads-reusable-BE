@@ -12,6 +12,7 @@ server.use(helmet())
 server.use(express.json())
 server.use('/api/auth', authRouter)
 server.use('/api/user', userRouter)
+server.use('/api/docs', express.static('./docs'))
 
 
 
