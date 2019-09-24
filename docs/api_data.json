@@ -131,14 +131,14 @@
             "type": "Object",
             "optional": false,
             "field": "user",
-            "description": "<p>An object with the user id and username</p>"
+            "description": "<p>An object with the user id and username and token</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 OK\n{\n \"id\": 8,\n \"username\": \"doctest\"\n}",
+          "content": "HTTP/1.1 201 OK\n{\n \"id\": 8,\n \"username\": \"doctest\",\n \"token\": \"slkvujh3872rgvyhoru8iyghr897fghrgo8y7ghv8orgh07h\"\n}",
           "type": "json"
         }
       ]
