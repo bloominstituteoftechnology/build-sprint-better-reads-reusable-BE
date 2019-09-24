@@ -243,7 +243,7 @@
       },
       "examples": [
         {
-          "title": "Request-Example:",
+          "title": "Header-Example:",
           "content": "{\n \"Content-Type\": \"application/json\",\n    \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
           "type": "json"
         }
