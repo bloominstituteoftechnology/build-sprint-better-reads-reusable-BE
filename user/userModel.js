@@ -7,6 +7,7 @@ module.exports =
     // removeBook,
     // removeDescription,
     getUserWithBooksAndDesc,
+    randomBooks,
 }
 
 function getBooksByUserId(id)
@@ -58,4 +59,22 @@ async function getUserWithBooksAndDesc(id)
         books: booklist,
         descriptions: descriptionList
     }
+}
+
+//TODO: replace this with actual DS thing maybe
+async function randomBooks()
+{
+    const books = await db('books')
+    const randomBook = arr =>
+    {
+        let ind = Math.floor(Math.random()*arr.length)
+        return arr.splice(ind, 1)[0]
+    }
+    let bookList = []
+    for(let i=0; i<5; i++)
+    {
+        bookList.push(randomBook(books))
+    }
+    console.log(bookList)
+    return bookList
 }
