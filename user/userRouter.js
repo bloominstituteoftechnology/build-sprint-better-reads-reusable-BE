@@ -13,7 +13,7 @@ router.use(cors())
  * 
  * @apiHeader {json} authorization The json web token, sent to the server
  * 
- * @apiHeaderExample {json} Request-Example:
+ * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json",
     "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
