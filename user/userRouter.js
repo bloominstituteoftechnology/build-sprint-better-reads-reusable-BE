@@ -103,4 +103,29 @@ router.get('/', restricted, (req, res) =>
         })
 })
 
+router.post('/book', restricted, (req, res) =>
+{
+    if(!req.body.book)
+    {
+        res.status(400).json({ errorMessage: "requires a book" })
+    }
+    else
+    {
+        Auth.findBy({username: req.user.username})
+        .then(response =>
+            {
+                Users.addBook()
+                .then(userResponse =>
+                    {
+                        res.status(200).json(userResponse)
+                    })
+                .catch(err =>
+                    {
+                        res.status(500).json(err)
+                    })
+            })
+
+    }
+})
+
 module.exports = router
