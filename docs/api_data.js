@@ -264,7 +264,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n\"username\": \"bob\",\n\"id\": 1,\n\"books\": [\n  {\n      \"title\": \"Javascript Data Structures and Algorithms\",\n      \"authors\": \"Sammie Bae\"\n  },\n  {\n      \"title\": \"Webster's Dictionary\",\n      \"authors\": \"Webster\"\n  }\n ],\n \"descriptions\": [\n  {\n      \"description\": \"A book about some kind of Javascript structures or methods for problem solving\"\n  },\n  {\n      \"description\": \"A book to tell you the meanings of words\"\n  }\n ]\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"username\": \"bob\",\n  \"id\": 1,\n  \"books\": [\n    {\n      \"title\": \"Webster's Dictionary\",\n      \"authors\": \"Webster\"\n    },\n    {\n      \"title\": \"Javascript Data Structures and Algorithms\",\n      \"authors\": \"Sammie Bae\"\n    }\n  ],\n  \"descriptions\": [\n    {\n      \"description\": \"A book to tell you the meanings of words\",\n      \"id\": 2,\n      \"books\": [\n        {\n          \"title\": \"Webster's Dictionary\"\n        },\n        {\n          \"title\": \"Pathfinder 2nd Edition\"\n        }\n      ]\n    },\n    {\n      \"description\": \"A book about some kind of Javascript structures or methods for problem solving\",\n      \"id\": 3,\n      \"books\": [\n        {\n          \"title\": \"Javascript Data Structures and Algorithms\"\n        }\n      ]\n    }\n  ]\n}",
           "type": "json"
         }
       ]
