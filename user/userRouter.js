@@ -24,26 +24,41 @@ router.use(cors())
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * {
- * "username": "bob",
- * "id": 1,
- * "books": [
- *   {
- *       "title": "Javascript Data Structures and Algorithms",
- *       "authors": "Sammie Bae"
- *   },
- *   {
+ *   "username": "bob",
+ *   "id": 1,
+ *   "books": [
+ *     {
  *       "title": "Webster's Dictionary",
  *       "authors": "Webster"
- *   }
- *  ],
- *  "descriptions": [
- *   {
- *       "description": "A book about some kind of Javascript structures or methods for problem solving"
- *   },
- *   {
- *       "description": "A book to tell you the meanings of words"
- *   }
- *  ]
+ *     },
+ *     {
+ *       "title": "Javascript Data Structures and Algorithms",
+ *       "authors": "Sammie Bae"
+ *     }
+ *   ],
+ *   "descriptions": [
+ *     {
+ *       "description": "A book to tell you the meanings of words",
+ *       "id": 2,
+ *       "books": [
+ *         {
+ *           "title": "Webster's Dictionary"
+ *         },
+ *         {
+ *           "title": "Pathfinder 2nd Edition"
+ *         }
+ *       ]
+ *     },
+ *     {
+ *       "description": "A book about some kind of Javascript structures or methods for problem solving",
+ *       "id": 3,
+ *       "books": [
+ *         {
+ *           "title": "Javascript Data Structures and Algorithms"
+ *         }
+ *       ]
+ *     }
+ *   ]
  * }
  * 
  * @apiError (400) {Object} bad-request-error The authorization header is absent

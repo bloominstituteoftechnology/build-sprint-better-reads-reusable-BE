@@ -57,11 +57,31 @@ exports.up = function(knex) {
 
         tbl.primary(['user_id', 'description_id'])
     })
+    .createTable('descriptions-books', tbl =>
+    {
+        tbl
+            .integer('description_id')
+            .unsigned()
+            .references('id')
+            .inTable('descriptions')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+        tbl
+            .integer('book_id')
+            .unsigned()
+            .references('id')
+            .inTable('books')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+
+        tbl.primary(['description_id', 'book_id'])
+    })
 
 };
 
 exports.down = function(knex) {
     return knex.schema
+        .dropTableIfExists('descriptions-books')
         .dropTableIfExists('users-descriptions')
         .dropTableIfExists('users-books')
         .dropTableIfExists('descriptions')
