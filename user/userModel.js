@@ -37,22 +37,12 @@ async function getDescriptionsByUserId(id)
 
     
     let descPlusB = []
-    console.log('a', descriptionList.length)
     for(let i = 0; i < descriptionList.length; i++)
     {
-        console.log('b', descPlusB)
         let books = await getBooksByDescriptionID(descriptionList[i].id)
-        // console.log({...el, books})
-        console.log(books)
         descPlusB.push({...descriptionList[i], books})
     }
 
-    // descriptionList.forEach(async el =>
-    // {
-    //     let books = await getBooksByDescriptionID(el.id)
-    //     console.log({...el, books})
-    //     descPlusB.push({...el, books})
-    // })
     return descPlusB
 }
 
