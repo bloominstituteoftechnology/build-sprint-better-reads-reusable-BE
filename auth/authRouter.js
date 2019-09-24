@@ -54,10 +54,11 @@ router.post('/register', (req, res) =>
     {
         res.status(400).json({ errorMessage: "Missing username or password" })
     }
-    else if(Users.findBy({username: req.body.username}))
-    {
-        res.status(409).json({ errorMessage: "That username is already registered" })
-    }
+    // else if(Users.findBy({username: req.body.username}))
+    // {
+    //     console.log(Users.findBy({username: req.body.username}).username)
+    //     res.status(409).json({ errorMessage: "That username is already registered" })
+    // }
     else
     {
         let {username, password} = req.body
