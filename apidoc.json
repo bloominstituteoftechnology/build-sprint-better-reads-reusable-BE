@@ -1,0 +1,7 @@
+{
+    "name": "better-reads-bw",
+    "version": "0.1.0",
+    "description": "API docs for the back-end of the better reads app",
+    "title": "Better Reads API Docs",
+    "url" : "https://better-reads-bw.herokuapp.com/api/docs"
+}
