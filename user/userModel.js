@@ -19,14 +19,31 @@ function getBooksByUserId(id)
             .then(booklist => booklist)
 }
 
-function getDescriptionsByUserId(id)
+async function getBooksByDescriptionID(id)
 {
-    return db('users as u')
+    return db('books as b')
+        .join('descriptions-books as dbooks', 'b.id', '=', 'dbooks.book_id')
+        .select('b.title')
+        .where({'dbooks.description_id': id})
+}
+
+async function getDescriptionsByUserId(id)
+{
+    let descriptionList = await db('users as u')
         .join('users-descriptions as ud', 'ud.user_id', '=', 'u.id')
         .join('descriptions as d', 'ud.description_id', '=', 'd.id')
-        .select('d.description')
+        .select('d.description', 'd.id')
         .where({'u.id': id})
-            .then(descriptionList => descriptionList)
+
+    
+    let descPlusB = []
+    for(let i = 0; i < descriptionList.length; i++)
+    {
+        let books = await getBooksByDescriptionID(descriptionList[i].id)
+        descPlusB.push({...descriptionList[i], books})
+    }
+
+    return descPlusB
 }
 
 async function getUserWithBooksAndDesc(id)
@@ -42,24 +59,3 @@ async function getUserWithBooksAndDesc(id)
         descriptions: descriptionList
     }
 }
-
-// return db('users')
-// .where({id})
-// .first()
-// .then(user =>
-//     {
-//         return getBooksByUserId(id)
-//             .then(booklist =>
-//                 {
-//                     return getDescriptionsByUserId(id)
-//                         .then(descriptionList =>
-//                             {
-//                                 return {
-//                                     username: user.username, 
-//                                     id: user.id,
-//                                     books: booklist,
-//                                     descriptions: descriptionList
-//                                 }
-//                             })
-//                 })
-//     })
