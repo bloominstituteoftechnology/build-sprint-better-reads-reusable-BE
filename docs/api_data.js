@@ -335,18 +335,160 @@ define({ "api": [
           "type": "json"
         },
         {
+          "title": "400-Error-Response-No-Token:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"errorMessage\": \"No credentials provided\"\n}",
+          "type": "json"
+        },
+        {
           "title": "401-Error-Response:",
           "content": "HTTP/1.1 401 Unauthorized\n{\n \"errorMessage\": \"Invalid Credentials\"\n}",
           "type": "json"
         },
         {
-          "title": "Error-Response-Book-Not-In-List:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Book is not in list\"\n}",
+          "title": "404-Error-Response-No-Book:",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"message\": \"Book is not in list\"\n}",
           "type": "json"
         },
         {
           "title": "500-Error-Response:",
           "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"errorMessage\": \"Internal Error: Could not delete book\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./user/userRouter.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "delete",
+    "url": "/api/user/description",
+    "title": "Delete Description",
+    "name": "DeleteDescription",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "json",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>The json web token, sent to the server</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n    \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Integer",
+            "optional": false,
+            "field": "descriptionId",
+            "description": "<p>The id of the description you want to delete</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Description-Delete-Example:",
+          "content": "{\n \"descriptionId\": 8\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "String",
+            "optional": false,
+            "field": "Success",
+            "description": "<p>A message about deleting the description from the user</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Deleted description 8 from user 2\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The descriptionId or token is absent</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "unauthorized-error",
+            "description": "<p>The user sent an invalid token</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "type": "String",
+            "optional": false,
+            "field": "No-Description-Error",
+            "description": "<p>A message that the description was not saved for the user</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Error in deleting description</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"errorMessage\": \"requires a descriptionId\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "400-Error-Response-No-Token:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"errorMessage\": \"No credentials provided\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n \"errorMessage\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-Error-Response-No-Desc:",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"message\": \"Description is not in list\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"errorMessage\": \"Internal Error: Could not delete description\"\n}",
           "type": "json"
         }
       ]
@@ -561,6 +703,11 @@ define({ "api": [
           "type": "json"
         },
         {
+          "title": "400-Error-Response-No-Token:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"errorMessage\": \"No credentials provided\"\n}",
+          "type": "json"
+        },
+        {
           "title": "401-Error-Response:",
           "content": "HTTP/1.1 401 Unauthorized\n{\n \"errorMessage\": \"Invalid Credentials\"\n}",
           "type": "json"
@@ -676,6 +823,11 @@ define({ "api": [
         {
           "title": "400-Error-Response:",
           "content": "HTTP/1.1 400 Bad Request\n{\n \"errorMessage\": \"Missing description\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "400-Error-Response-No-Token:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"errorMessage\": \"No credentials provided\"\n}",
           "type": "json"
         },
         {
@@ -813,13 +965,18 @@ define({ "api": [
           "type": "json"
         },
         {
+          "title": "400-Error-Response-No-Token:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"errorMessage\": \"No credentials provided\"\n}",
+          "type": "json"
+        },
+        {
           "title": "401-Error-Response:",
           "content": "HTTP/1.1 401 Unauthorized\n{\n \"errorMessage\": \"Invalid Credentials\"\n}",
           "type": "json"
         },
         {
-          "title": "Error-Response-Book-Not-In-List:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Book is not in list\"\n}",
+          "title": "404-Error-Response-No-Book:",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"message\": \"Book is not in list\"\n}",
           "type": "json"
         },
         {
