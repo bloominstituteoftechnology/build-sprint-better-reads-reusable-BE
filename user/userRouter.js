@@ -31,18 +31,24 @@ router.use(cors())
  *       "title": "Coffee Table Book About Coffee Tables",
  *       "authors": "Cosmo Kramer",
  *       "id": 1,
+ *       "rating": 5,
+ *       "ISBN": "658716874168",
  *       "read": 0
  *     },
  *     {
  *       "title": "Javascript Data Structures and Algorithms",
  *       "authors": "Sammie Bae",
  *       "id": 3,
+ *       "rating": 1.5,
+ *       "ISBN": "574554681541",
  *       "read": 0
  *     },
  *     {
  *       "title": "Pathfinder 2nd Edition",
  *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
  *       "id": 4,
+ *       "rating": null,
+ *       "ISBN": null,
  *       "read": 0
  *     }
  *   ],
@@ -52,12 +58,18 @@ router.use(cors())
  *       "id": 1,
  *       "books": [
  *         {
+ *           "id": 1,
  *           "title": "Coffee Table Book About Coffee Tables",
- *           "id": 1
+ *           "authors": "Cosmo Kramer",
+ *           "rating": 5,
+ *           "ISBN": "658716874168"
  *         },
  *         {
+ *           "id": 2,
  *           "title": "Webster's Dictionary",
- *           "id": 2
+ *           "authors": "Webster",
+ *           "rating": 2.5,
+ *           "ISBN": "5758646574647"
  *         }
  *       ]
  *     },
@@ -66,8 +78,11 @@ router.use(cors())
  *       "id": 3,
  *       "books": [
  *         {
+ *           "id": 3,
  *           "title": "Javascript Data Structures and Algorithms",
- *           "id": 3
+ *           "authors": "Sammie Bae",
+ *           "rating": 1.5,
+ *           "ISBN": "574554681541"
  *         }
  *       ]
  *     },
@@ -76,8 +91,11 @@ router.use(cors())
  *       "id": 4,
  *       "books": [
  *         {
+ *           "id": 4,
  *           "title": "Pathfinder 2nd Edition",
- *           "id": 4
+ *           "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *           "rating": null,
+ *           "ISBN": null
  *         }
  *       ]
  *     }
@@ -121,6 +139,7 @@ router.get('/', restricted, (req, res) =>
                 })
             .catch(err =>
                 {
+                    console.log(err)
                     res.status(500).json(err)
                 })
         })
