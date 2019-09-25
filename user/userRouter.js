@@ -426,7 +426,7 @@ router.delete('/book', restricted, (req, res) =>
  * }
  * 
  * @apiParam {Integer} bookId The id of the book you want to delete
- * @apiParam {Boolean} bookRead The boolean of whether the book has been read or not
+ * @apiParam {Boolean} read The boolean of whether the book has been read or not
  * 
  * @apiParamExample {json} Book-Put-Example:
  * {

@@ -734,7 +734,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "Boolean",
             "optional": false,
-            "field": "bookRead",
+            "field": "read",
             "description": "<p>The boolean of whether the book has been read or not</p>"
           }
         ]
