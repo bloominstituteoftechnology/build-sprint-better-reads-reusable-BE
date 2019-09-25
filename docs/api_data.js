@@ -323,6 +323,129 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/api/user/book",
+    "title": "Save Book",
+    "name": "PostBookSave",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "json",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>The json web token, sent to the server</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n    \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "integer",
+            "optional": false,
+            "field": "bookId",
+            "description": "<p>The id of the book you want to save</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Book-Save-Example:",
+          "content": "{\n \"bookId\": 7\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Integer",
+            "optional": false,
+            "field": "Success",
+            "description": "<p>The id of the saved book</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n7",
+          "type": "json"
+        },
+        {
+          "title": "Success-Response-Book-Already-Added:",
+          "content": "HTTP/1.1 200 OK\n0",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The bookId or token is absent</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "unauthorized-error",
+            "description": "<p>The user sent an invalid token</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Error in adding book</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"errorMessage\": \"requires a bookId\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n \"errorMessage\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"errorMessage\": \"Internal Error: Could not save book\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./user/userRouter.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
     "url": "/api/user/description",
     "title": "Post Book Description",
     "name": "PostDescription",
@@ -395,7 +518,7 @@ define({ "api": [
             "type": "Object",
             "optional": false,
             "field": "bad-request-error",
-            "description": "<p>The authorization header is absent</p>"
+            "description": "<p>The description or token is absent</p>"
           }
         ],
         "401": [
@@ -420,7 +543,7 @@ define({ "api": [
       "examples": [
         {
           "title": "400-Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n \"errorMessage\": \"No credentials provided\"\n}",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"errorMessage\": \"Missing description\"\n}",
           "type": "json"
         },
         {

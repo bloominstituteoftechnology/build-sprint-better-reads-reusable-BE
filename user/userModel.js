@@ -8,6 +8,10 @@ module.exports =
     // removeDescription,
     getUserWithBooksAndDesc,
     randomBooks,
+    addBook,
+    // addDescription,
+    addUserDescWithBookResults,
+    addBookByUserId,
 }
 
 function getBooksByUserId(id)
@@ -15,7 +19,7 @@ function getBooksByUserId(id)
     return db('users as u')
         .join('users-books as ub', 'ub.user_id', '=', 'u.id')
         .join('books as b', 'ub.book_id', '=', 'b.id')
-        .select('b.title', 'b.authors')
+        .select('b.title', 'b.authors', 'b.id')
         .where({'u.id': id})
             .then(booklist => booklist)
 }
@@ -24,7 +28,7 @@ async function getBooksByDescriptionID(id)
 {
     return db('books as b')
         .join('descriptions-books as dbooks', 'b.id', '=', 'dbooks.book_id')
-        .select('b.title')
+        .select('b.title', 'b.id')
         .where({'dbooks.description_id': id})
 }
 
@@ -75,6 +79,60 @@ async function randomBooks()
     {
         bookList.push(randomBook(books))
     }
-    console.log(bookList)
     return bookList
+}
+
+async function addDescription(description)
+{
+    console.log(description)
+    let desc_id = await db('descriptions').insert(description, 'id')
+    return desc_id
+}
+
+async function addBook(book)
+{
+    //TODO: check that book isn't already in table, via isbn?
+    let existantBook = await db('books').where({'title': book.title}).first()
+    console.log('eb',existantBook)
+    if(existantBook) return existantBook.id
+    else 
+    {
+        let [book_id] = await db('books').insert(book, 'id')
+        return book_id
+    }
+}
+
+async function addDescriptionBook(desc_id, book_id)
+{
+    await db('descriptions-books').insert({'description_id': desc_id, 'book_id': book_id})
+}
+
+async function addUserDescription(user_id, desc_id)
+{
+    await db('users-descriptions').insert({'user_id': user_id, 'description_id': desc_id})
+}
+
+async function addUserDescWithBookResults(desc, aBooks, userId)
+{
+    let [descId] = await addDescription({description: desc})
+    console.log(`descId: ${descId}`)
+    await addUserDescription(userId, descId)
+    for(i = 0; i < aBooks.length; i++)
+    {
+        let book_id = await addBook(aBooks[i])
+        addDescriptionBook(descId, book_id)
+    }
+    return true
+}
+
+async function addBookByUserId(userId, bookId)
+{
+    let bookInList = await db('users-books').where({'user_id': userId, 'book_id': bookId}).first()
+    if (bookInList) return 0
+    else 
+    {
+        await db('users-books').insert({'user_id': userId, 'book_id': bookId})
+        return bookId
+    }
+
 }
