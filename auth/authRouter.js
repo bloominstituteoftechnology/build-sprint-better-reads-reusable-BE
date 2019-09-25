@@ -3,6 +3,8 @@ const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Users = require('./authModel')
 const cors = require('cors')
+const duplicateUser = require('../utils/duplicateUser')
+
 
 router.use(cors())
 
@@ -49,17 +51,12 @@ router.use(cors())
  * 
  */
 
-router.post('/register', (req, res) =>
+router.post('/register', duplicateUser, (req, res) =>
 {
     if(!req.body.username || !req.body.password)
     {
         res.status(400).json({ errorMessage: "Missing username or password" })
     }
-    // else if(Users.findBy({username: req.body.username}))
-    // {
-    //     console.log(Users.findBy({username: req.body.username}).username)
-    //     res.status(409).json({ errorMessage: "That username is already registered" })
-    // }
     else
     {
         let {username, password} = req.body
@@ -74,7 +71,6 @@ router.post('/register', (req, res) =>
                             Users.findBy({ username: response.username }).first()
                             .then(user =>
                                 {
-                                    console.log(user)
                                     bcryptjs.compare(password, user.password, function(err, response)
                                     {
                                         if(response)
