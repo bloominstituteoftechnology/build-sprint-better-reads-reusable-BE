@@ -2,20 +2,27 @@ const server = require('../api/server')
 const request = require('supertest')
 const db = require('../database/dbConfig')
 const prepareTestDB = require('../utils/prepareTestDB')
-const restricted = require('../utils/restricted')
-jest.mock('../utils/restricted.js')
 
 
 beforeEach(prepareTestDB)
-beforeEach(() => restricted.mockClear())
 
-describe('authRouter', () => {
-    it('post /register', async () =>
+describe('post /register', () => {
+    it('returns a 201', async () =>
     {
-        const res = await request(server).post('/api/auth/register').send({username: "testing", password: "123"})
+        const res = await request(server)
+            .post('/api/auth/register')
+            .send({"username": "testing", "password": "123"})
         expect(res.status).toBe(201)
-        console.log(res.body)
     })
+    // it('gives a token, username, id', async () =>
+    // {
+    //     const res = await request(server)
+    //         .post('/api/auth/register')
+    //         .send({username: "testGuy", password: "123"})
+    //     expect(res.body.username).toBe("testGuy")
+    //     expect(res.body.token).toBeTruthy()
+    //     expect(res.body.username).toBe(1)
+    // })
 })
 
 

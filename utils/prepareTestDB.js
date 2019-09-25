@@ -1,3 +1,5 @@
+const db = require('../database/dbConfig')
+
 module.exports = () => 
 {
     return db.migrate.rollback()
