@@ -24,28 +24,52 @@ router.use(cors())
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * {
- *   "username": "bob",
- *   "id": 1,
+ *   "username": "amy",
+ *   "id": 2,
  *   "books": [
  *     {
- *       "title": "Webster's Dictionary",
- *       "authors": "Webster"
+ *       "title": "Coffee Table Book About Coffee Tables",
+ *       "authors": "Cosmo Kramer",
+ *       "id": 1,
+ *       "rating": 5,
+ *       "ISBN": "658716874168",
+ *       "read": 0
  *     },
  *     {
  *       "title": "Javascript Data Structures and Algorithms",
- *       "authors": "Sammie Bae"
+ *       "authors": "Sammie Bae",
+ *       "id": 3,
+ *       "rating": 1.5,
+ *       "ISBN": "574554681541",
+ *       "read": 0
+ *     },
+ *     {
+ *       "title": "Pathfinder 2nd Edition",
+ *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *       "id": 4,
+ *       "rating": null,
+ *       "ISBN": null,
+ *       "read": 0
  *     }
  *   ],
  *   "descriptions": [
  *     {
- *       "description": "A book to tell you the meanings of words",
- *       "id": 2,
+ *       "description": "A book to set on a table, and maybe it's self-referential",
+ *       "id": 1,
  *       "books": [
  *         {
- *           "title": "Webster's Dictionary"
+ *           "id": 1,
+ *           "title": "Coffee Table Book About Coffee Tables",
+ *           "authors": "Cosmo Kramer",
+ *           "rating": 5,
+ *           "ISBN": "658716874168"
  *         },
  *         {
- *           "title": "Pathfinder 2nd Edition"
+ *           "id": 2,
+ *           "title": "Webster's Dictionary",
+ *           "authors": "Webster",
+ *           "rating": 2.5,
+ *           "ISBN": "5758646574647"
  *         }
  *       ]
  *     },
@@ -54,7 +78,24 @@ router.use(cors())
  *       "id": 3,
  *       "books": [
  *         {
- *           "title": "Javascript Data Structures and Algorithms"
+ *           "id": 3,
+ *           "title": "Javascript Data Structures and Algorithms",
+ *           "authors": "Sammie Bae",
+ *           "rating": 1.5,
+ *           "ISBN": "574554681541"
+ *         }
+ *       ]
+ *     },
+ *     {
+ *       "description": "A book about playing games with dragons and such",
+ *       "id": 4,
+ *       "books": [
+ *         {
+ *           "id": 4,
+ *           "title": "Pathfinder 2nd Edition",
+ *           "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *           "rating": null,
+ *           "ISBN": null
  *         }
  *       ]
  *     }
@@ -98,6 +139,7 @@ router.get('/', restricted, (req, res) =>
                 })
             .catch(err =>
                 {
+                    console.log(err)
                     res.status(500).json(err)
                 })
         })
@@ -129,32 +171,42 @@ router.get('/', restricted, (req, res) =>
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * {
- *   "description": "a book about something",
+ *   "description": "a book about mars",
  *   "books": [
  *     {
- *       "id": 4,
- *       "title": "Pathfinder 2nd Edition",
- *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter"
+ *       "id": 7,
+ *       "title": "Calculus",
+ *       "authors": "Michael Spivak",
+ *       "rating": 3.5,
+ *       "ISBN": "565156416515648"
  *     },
  *     {
- *       "id": 2,
- *       "title": "Webster's Dictionary",
- *       "authors": "Webster"
- *     },
- *     {
- *       "id": 6,
- *       "title": "Red Planet",
- *       "authors": "Robert Heinlien"
+ *       "id": 3,
+ *       "title": "Javascript Data Structures and Algorithms",
+ *       "authors": "Sammie Bae",
+ *       "rating": 1.5,
+ *       "ISBN": "574554681541"
  *     },
  *     {
  *       "id": 5,
  *       "title": "Harry Potter and the Half-Blood Prince",
- *       "authors": "J.K. Rowling"
+ *       "authors": "J.K. Rowling",
+ *       "rating": 5,
+ *       "ISBN": "4505406540650"
  *     },
  *     {
- *       "id": 7,
- *       "title": "Calculus",
- *       "authors": "Michael Spivak"
+ *       "id": 1,
+ *       "title": "Coffee Table Book About Coffee Tables",
+ *       "authors": "Cosmo Kramer",
+ *       "rating": 5,
+ *       "ISBN": "658716874168"
+ *     },
+ *     {
+ *       "id": 4,
+ *       "title": "Pathfinder 2nd Edition",
+ *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *       "rating": null,
+ *       "ISBN": null
  *     }
  *   ]
  * }
@@ -166,7 +218,11 @@ router.get('/', restricted, (req, res) =>
  * {
  *  "errorMessage": "Missing description"
  * }
- * 
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
  * @apiError (401) {Object} unauthorized-error The user sent an invalid token
  * 
  * @apiErrorExample 401-Error-Response:
@@ -197,12 +253,9 @@ router.post('/description', restricted, (req, res) =>
             .then(response =>
                 {   
                     let books = response
-                    console.log(`req.user.username: ${req.user.username}`)
                     Auth.findBy({username: req.user.username}).first()
                     .then(user =>
                         {
-                            console.log('user.id', user.id)
-                            console.log('description', req.body.description)
                             Users.addUserDescWithBookResults(req.body.description, books, user.id)
                             .then(response =>
                                 {
@@ -220,7 +273,6 @@ router.post('/description', restricted, (req, res) =>
                 })
             .catch(error =>
                 {
-                    console.log(error)
                     res.status(500).json({ errorMessage: `Internal Error: Could not search for books` })
                 })
     }
@@ -264,7 +316,11 @@ router.post('/description', restricted, (req, res) =>
  * {
  *  "errorMessage": "requires a bookId"
  * }
- * 
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
  * @apiError (401) {Object} unauthorized-error The user sent an invalid token
  * 
  * @apiErrorExample 401-Error-Response:
@@ -306,5 +362,281 @@ router.post('/book', restricted, (req, res) =>
             })
     }
 })
+
+/**
+ * @api {delete} /api/user/book Delete Book
+ * @apiName DeleteBook
+ * @apiGroup User
+ * 
+ * @apiHeader {json} authorization The json web token, sent to the server
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+    "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Integer} bookId The id of the book you want to delete
+ * 
+ * @apiParamExample {json} Book-Delete-Example:
+ * {
+ *  "bookId": 6
+ * }
+ * 
+ * @apiSuccess (200) {String} Success A message about deleting the book from the user
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Deleted book 6 from user 2"
+ * }
+ * 
+ * @apiError (400) {Object} bad-request-error The bookId or token is absent
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "errorMessage": "requires a bookId"
+ * }
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
+ * 
+ * @apiError (401) {Object} unauthorized-error The user sent an invalid token
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Unauthorized
+ * {
+ *  "errorMessage": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {String} No-Book-Error A message that the book was not saved for the user
+ * @apiErrorExample 404-Error-Response-No-Book:
+ * HTTP/1.1 404 Not Found
+ * {
+ *   "message": "Book is not in list"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Error in deleting book
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "errorMessage": "Internal Error: Could not delete book"
+ * }
+ * 
+ */
+
+router.delete('/book', restricted, (req, res) =>
+{
+    if(!req.body.bookId)
+    {
+        res.status(400).json({ errorMessage: "requires a bookId" })
+    }
+    else
+    {
+        Auth.findBy({username: req.user.username})
+        .then(response =>
+            {
+                Users.removeBookByUserId(response[0].id, req.body.bookId)
+                .then(bookResponse =>
+                    {
+                        res.status(bookResponse.code).json({message: bookResponse.message})
+                    })
+                .catch(err =>
+                    {
+                        console.log(err)
+                        res.status(500).json({errorMessage: "Internal Error: Could not delete book"})
+                    })
+            })
+    }
+})
+
+/**
+ * @api {put} /api/user/book Put Book
+ * @apiName PutBook
+ * @apiGroup User
+ * 
+ * @apiHeader {json} authorization The json web token, sent to the server
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+    "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Integer} bookId The id of the book you want to delete
+ * @apiParam {Boolean} read The boolean of whether the book has been read or not
+ * 
+ * @apiParamExample {json} Book-Put-Example:
+ * { 
+ * 	 "bookId": 7,
+ * 	 "changes": {"read": true}
+ * }
+ * 
+ * @apiSuccess (200) {Object} Success The updated book for the user
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Updated book 6 for user 2"
+ * }
+ * 
+ * @apiError (400) {Object} bad-request-error The bookId or token is absent
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "errorMessage": "requires a bookId"
+ * }
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
+ * 
+ * @apiError (401) {Object} unauthorized-error The user sent an invalid token
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Unauthorized
+ * {
+ *  "errorMessage": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {String} No-Book-Error A message that the book was not saved for the user
+ * @apiErrorExample 404-Error-Response-No-Book:
+ * HTTP/1.1 404 Not Found
+ * {
+ *   "message": "Book is not in list"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Error in updating book
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "errorMessage": "Internal Error: Could not update book"
+ * }
+ * 
+ */
+
+router.put('/book', restricted, (req, res) =>
+{
+    if(!req.body.bookId || !req.body.changes)
+    {
+        res.status(400).json({ errorMessage: "requires a bookId and changes for the book" })
+    }
+    else
+    {
+        Auth.findBy({username: req.user.username})
+        .then(response =>
+            {
+                Users.updateBookByUserId(response[0].id, req.body.bookId, req.body.changes)
+                .then(bookResponse =>
+                    {
+                        res.status(bookResponse.code).json({message: bookResponse.message})
+                    })
+                .catch(err =>
+                    {
+                        console.log(err)
+                        res.status(500).json({errorMessage: "Internal Error: Could not update book"})
+                    })
+            })
+    }
+})
+
+/**
+ * @api {delete} /api/user/description Delete Description
+ * @apiName DeleteDescription
+ * @apiGroup User
+ * 
+ * @apiHeader {json} authorization The json web token, sent to the server
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+    "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Integer} descriptionId The id of the description you want to delete
+ * 
+ * @apiParamExample {json} Description-Delete-Example:
+ * {
+ *  "descriptionId": 8
+ * }
+ * 
+ * @apiSuccess (200) {String} Success A message about deleting the description from the user
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Deleted description 8 from user 2"
+ * }
+ * 
+ * @apiError (400) {Object} bad-request-error The descriptionId or token is absent
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "errorMessage": "requires a descriptionId"
+ * }
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
+ * 
+ * @apiError (401) {Object} unauthorized-error The user sent an invalid token
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Unauthorized
+ * {
+ *  "errorMessage": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {String} No-Description-Error A message that the description was not saved for the user
+ * @apiErrorExample 404-Error-Response-No-Desc:
+ * HTTP/1.1 404 Not Found
+ * {
+ *   "message": "Description is not in list"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Error in deleting description
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "errorMessage": "Internal Error: Could not delete description"
+ * }
+ * 
+ */
+
+router.delete('/description', restricted, (req, res) =>
+{
+    if(!req.body.descriptionId)
+    {
+        res.status(400).json({ errorMessage: "requires a descriptionId" })
+    }
+    else
+    {
+        Auth.findBy({username: req.user.username})
+        .then(response =>
+            {
+                Users.removeDescByUserId(response[0].id, req.body.descriptionId)
+                .then(descResponse =>
+                    {
+                        res.status(descResponse.code).json({message: descResponse.message})
+                    })
+                .catch(err =>
+                    {
+                        console.log(err)
+                        res.status(500).json({errorMessage: "Internal Error: Could not delete description"})
+                    })
+            })
+    }
+})
+
 
 module.exports = router

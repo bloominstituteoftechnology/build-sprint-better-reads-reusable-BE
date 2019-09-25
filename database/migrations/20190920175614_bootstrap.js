@@ -12,6 +12,8 @@ exports.up = function(knex) {
         tbl.increments()
         tbl.string('title', 256).notNullable()
         tbl.string('authors', 256).notNullable()
+        tbl.float('rating')
+        tbl.string('ISBN')
     })
     .createTable('descriptions', tbl =>
     {
@@ -20,6 +22,7 @@ exports.up = function(knex) {
     })
     .createTable('users-books', tbl =>
     {
+        tbl.boolean('read').notNullable().defaultTo(false)
         tbl
             .integer('user_id')
             .unsigned()
