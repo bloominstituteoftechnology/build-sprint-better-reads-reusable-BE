@@ -197,12 +197,9 @@ router.post('/description', restricted, (req, res) =>
             .then(response =>
                 {   
                     let books = response
-                    console.log(`req.user.username: ${req.user.username}`)
                     Auth.findBy({username: req.user.username}).first()
                     .then(user =>
                         {
-                            console.log('user.id', user.id)
-                            console.log('description', req.body.description)
                             Users.addUserDescWithBookResults(req.body.description, books, user.id)
                             .then(response =>
                                 {
@@ -220,7 +217,6 @@ router.post('/description', restricted, (req, res) =>
                 })
             .catch(error =>
                 {
-                    console.log(error)
                     res.status(500).json({ errorMessage: `Internal Error: Could not search for books` })
                 })
     }

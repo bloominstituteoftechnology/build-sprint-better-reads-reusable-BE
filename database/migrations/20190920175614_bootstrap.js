@@ -20,6 +20,7 @@ exports.up = function(knex) {
     })
     .createTable('users-books', tbl =>
     {
+        tbl.boolean('read').notNullable().defaultTo(false)
         tbl
             .integer('user_id')
             .unsigned()
