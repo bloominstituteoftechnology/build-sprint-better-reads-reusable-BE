@@ -20,10 +20,11 @@ describe('GET /api/user', () =>
         })
         const res = await request(server)
             .get('/api/user')
-            .send()
+            .send({authorization: "ajklwhfvbqurfqob"})
         expect(res.status).toBe(200)
     })
 })
+
 
 // expect(restrict).toBeCalled()
 
