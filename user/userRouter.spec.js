@@ -20,8 +20,40 @@ describe('GET /api/user', () =>
         })
         const res = await request(server)
             .get('/api/user')
-            .send({authorization: "ajklwhfvbqurfqob"})
+            .send()
         expect(res.status).toBe(200)
+    })
+    it('has type json', async () =>
+    {
+        restricted.mockImplementationOnce((req, res, next) =>
+        {
+            req.user = {username: "amy"}
+            next()
+        })
+        const res = await request(server)
+            .get('/api/user')
+            .send()
+        expect(res.body).toHaveProperty("username")
+    })
+})
+
+describe('Post /api/description', () =>
+{
+    it('returns a description and a book list, with a 200 status', async () =>
+    {
+        restricted.mockImplementationOnce((req, res, next) =>
+        {
+            req.user = {username: "amy"}
+            next()
+        })
+        const res = await request(server)
+            .post('/api/user/description')
+            .send({"description": "a book of blah blah"})
+        expect(res.body).toHaveProperty("description")
+        expect(res.body).toHaveProperty("books")
+        expect(res.body.books).toHaveLength(5)
+        expect(res.status).toBe(200)
+
     })
 })
 

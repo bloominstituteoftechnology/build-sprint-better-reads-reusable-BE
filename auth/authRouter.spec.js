@@ -41,12 +41,3 @@ describe('post /login', () => {
         expect(res.body).toHaveProperty("token")
     })
 })
-
-
-// expect(restrict).toBeCalled()
-
-// restrict.mockImplementationOnce((req, res, next) =>
-// {
-//      req.user = {username: "blah"}        
-//      next()
-// })

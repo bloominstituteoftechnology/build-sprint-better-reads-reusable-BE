@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const Users = require('./authModel')
 const cors = require('cors')
 const duplicateUser = require('../utils/duplicateUser')
+const hashCount = require('../utils/hashCount')
 
 
 router.use(cors())
@@ -61,7 +62,7 @@ router.post('/register', duplicateUser, (req, res) =>
     {
         let {username, password} = req.body
         //TODO: inform FE if username is taken
-        bcryptjs.genSalt(14, function(err, salt)
+        bcryptjs.genSalt(hashCount, function(err, salt)
         {
             bcryptjs.hash(password, salt, function(err, hash)
             {
