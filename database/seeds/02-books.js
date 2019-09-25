@@ -24,8 +24,6 @@ exports.seed = function(knex, Promise)
             {
                 title: "Pathfinder 2nd Edition",
                 authors: "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
-                rating: 4,
-                ISBN: "546587465478484"
             },
             {
                 title: "Harry Potter and the Half-Blood Prince",

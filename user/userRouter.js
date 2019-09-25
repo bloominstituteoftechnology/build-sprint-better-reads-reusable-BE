@@ -26,9 +26,6 @@ router.use(cors())
  * {
  *   "username": "amy",
  *   "id": 2,
- * {
- *   "username": "amy",
- *   "id": 2,
  *   "books": [
  *     {
  *       "title": "Coffee Table Book About Coffee Tables",
@@ -50,8 +47,8 @@ router.use(cors())
  *       "title": "Pathfinder 2nd Edition",
  *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
  *       "id": 4,
- *       "rating": 4,
- *       "ISBN": "546587465478484",
+ *       "rating": null,
+ *       "ISBN": null,
  *       "read": 0
  *     }
  *   ],
@@ -97,8 +94,8 @@ router.use(cors())
  *           "id": 4,
  *           "title": "Pathfinder 2nd Edition",
  *           "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
- *           "rating": 4,
- *           "ISBN": "546587465478484"
+ *           "rating": null,
+ *           "ISBN": null
  *         }
  *       ]
  *     }
