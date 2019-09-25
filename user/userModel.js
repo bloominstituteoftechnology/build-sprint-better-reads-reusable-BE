@@ -19,7 +19,7 @@ function getBooksByUserId(id)
     return db('users as u')
         .join('users-books as ub', 'ub.user_id', '=', 'u.id')
         .join('books as b', 'ub.book_id', '=', 'b.id')
-        .select('b.title', 'b.authors', 'b.id', 'ub.read')
+        .select('b.title', 'b.authors', 'b.id', 'b.rating', 'b.ISBN', 'ub.read')
         .where({'u.id': id})
             .then(booklist => booklist)
 }
@@ -28,7 +28,7 @@ async function getBooksByDescriptionID(id)
 {
     return db('books as b')
         .join('descriptions-books as dbooks', 'b.id', '=', 'dbooks.book_id')
-        .select('b.title', 'b.id')
+        .select('b.id', 'b.title', 'b.authors', 'b.rating', 'b.ISBN')
         .where({'dbooks.description_id': id})
 }
 
