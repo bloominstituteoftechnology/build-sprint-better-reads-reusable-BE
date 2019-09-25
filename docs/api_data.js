@@ -131,14 +131,14 @@ define({ "api": [
             "type": "Object",
             "optional": false,
             "field": "user",
-            "description": "<p>An object with the user id and username</p>"
+            "description": "<p>An object with the user id and username and token</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 OK\n{\n \"id\": 8,\n \"username\": \"doctest\"\n}",
+          "content": "HTTP/1.1 201 OK\n{\n \"id\": 8,\n \"username\": \"doctest\",\n \"token\": \"slkvujh3872rgvyhoru8iyghr897fghrgo8y7ghv8orgh07h\"\n}",
           "type": "json"
         }
       ]
@@ -313,6 +313,247 @@ define({ "api": [
         {
           "title": "500-Error-Response:",
           "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"errorMessage\": \"Not sure until it comes up. Would be db error\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./user/userRouter.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/book",
+    "title": "Save Book",
+    "name": "PostBookSave",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "json",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>The json web token, sent to the server</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n    \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "integer",
+            "optional": false,
+            "field": "bookId",
+            "description": "<p>The id of the book you want to save</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Book-Save-Example:",
+          "content": "{\n \"bookId\": 7\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Integer",
+            "optional": false,
+            "field": "Success",
+            "description": "<p>The id of the saved book</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n7",
+          "type": "json"
+        },
+        {
+          "title": "Success-Response-Book-Already-Added:",
+          "content": "HTTP/1.1 200 OK\n0",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The bookId or token is absent</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "unauthorized-error",
+            "description": "<p>The user sent an invalid token</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Error in adding book</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"errorMessage\": \"requires a bookId\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n \"errorMessage\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"errorMessage\": \"Internal Error: Could not save book\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./user/userRouter.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/description",
+    "title": "Post Book Description",
+    "name": "PostDescription",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "json",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>The json web token, sent to the server</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n    \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "json",
+            "optional": false,
+            "field": "description",
+            "description": "<p>A description of the desired book</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Description-Example:",
+          "content": "{\n \"description\": \"A book about mars\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "booklist",
+            "description": "<p>An object with the description, and an array of 5 books</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"description\": \"a book about something\",\n  \"books\": [\n    {\n      \"id\": 4,\n      \"title\": \"Pathfinder 2nd Edition\",\n      \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\"\n    },\n    {\n      \"id\": 2,\n      \"title\": \"Webster's Dictionary\",\n      \"authors\": \"Webster\"\n    },\n    {\n      \"id\": 6,\n      \"title\": \"Red Planet\",\n      \"authors\": \"Robert Heinlien\"\n    },\n    {\n      \"id\": 5,\n      \"title\": \"Harry Potter and the Half-Blood Prince\",\n      \"authors\": \"J.K. Rowling\"\n    },\n    {\n      \"id\": 7,\n      \"title\": \"Calculus\",\n      \"authors\": \"Michael Spivak\"\n    }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The description or token is absent</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "unauthorized-error",
+            "description": "<p>The user sent an invalid token</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Error in retrieving books</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"errorMessage\": \"Missing description\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n \"errorMessage\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"errorMessage\": \"Internal Error: Could not search for books\"\n}",
           "type": "json"
         }
       ]

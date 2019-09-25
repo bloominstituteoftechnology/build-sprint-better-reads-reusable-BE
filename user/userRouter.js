@@ -103,4 +103,208 @@ router.get('/', restricted, (req, res) =>
         })
 })
 
+
+/**
+ * @api {post} /api/user/description Post Book Description
+ * @apiName PostDescription
+ * @apiGroup User
+ * 
+ * @apiHeader {json} authorization The json web token, sent to the server
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+    "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {json} description A description of the desired book
+ * 
+ * @apiParamExample {json} Description-Example:
+ * {
+ *  "description": "A book about mars"
+ * }
+ * 
+ * @apiSuccess (200) {Object} booklist An object with the description, and an array of 5 books
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "description": "a book about something",
+ *   "books": [
+ *     {
+ *       "id": 4,
+ *       "title": "Pathfinder 2nd Edition",
+ *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter"
+ *     },
+ *     {
+ *       "id": 2,
+ *       "title": "Webster's Dictionary",
+ *       "authors": "Webster"
+ *     },
+ *     {
+ *       "id": 6,
+ *       "title": "Red Planet",
+ *       "authors": "Robert Heinlien"
+ *     },
+ *     {
+ *       "id": 5,
+ *       "title": "Harry Potter and the Half-Blood Prince",
+ *       "authors": "J.K. Rowling"
+ *     },
+ *     {
+ *       "id": 7,
+ *       "title": "Calculus",
+ *       "authors": "Michael Spivak"
+ *     }
+ *   ]
+ * }
+ * 
+ * @apiError (400) {Object} bad-request-error The description or token is absent
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "errorMessage": "Missing description"
+ * }
+ * 
+ * @apiError (401) {Object} unauthorized-error The user sent an invalid token
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Unauthorized
+ * {
+ *  "errorMessage": "Invalid Credentials"
+ * }
+ * @apiError (500) {Object} internal-server-error Error in retrieving books
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "errorMessage": "Internal Error: Could not search for books"
+ * }
+ * 
+ */
+
+router.post('/description', restricted, (req, res) =>
+{
+    if(!req.body.description)
+    {
+        res.status(400).json({ errorMessage: "Missing description" })
+    }
+    else
+    {
+        //TODO: replace this with call to DS
+        Users.randomBooks()
+            .then(response =>
+                {   
+                    let books = response
+                    console.log(`req.user.username: ${req.user.username}`)
+                    Auth.findBy({username: req.user.username}).first()
+                    .then(user =>
+                        {
+                            console.log('user.id', user.id)
+                            console.log('description', req.body.description)
+                            Users.addUserDescWithBookResults(req.body.description, books, user.id)
+                            .then(response =>
+                                {
+                                    res.status(200).json({description: req.body.description, books: books})
+                                })
+                            .catch(err =>
+                                {
+                                    res.status(500).json({ errorMessage: `Internal Error: Could not search for books` })
+                                })
+                        })
+                    .catch(err =>
+                        {
+                            res.status(500)
+                        })
+                })
+            .catch(error =>
+                {
+                    console.log(error)
+                    res.status(500).json({ errorMessage: `Internal Error: Could not search for books` })
+                })
+    }
+})
+
+/**
+ * @api {post} /api/user/book Save Book
+ * @apiName PostBookSave
+ * @apiGroup User
+ * 
+ * @apiHeader {json} authorization The json web token, sent to the server
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+    "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {integer} bookId The id of the book you want to save
+ * 
+ * @apiParamExample {json} Book-Save-Example:
+ * {
+ *  "bookId": 7
+ * }
+ * 
+ * @apiSuccess (200) {Integer} Success The id of the saved book
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * 7
+ * 
+ * @apiSuccess (200) {Integer} Success Id 0, the book is already saved
+ * @apiSuccessExample Success-Response-Book-Already-Added:
+ * HTTP/1.1 200 OK
+ * 0
+ * 
+ * @apiError (400) {Object} bad-request-error The bookId or token is absent
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "errorMessage": "requires a bookId"
+ * }
+ * 
+ * @apiError (401) {Object} unauthorized-error The user sent an invalid token
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Unauthorized
+ * {
+ *  "errorMessage": "Invalid Credentials"
+ * }
+ * @apiError (500) {Object} internal-server-error Error in adding book
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "errorMessage": "Internal Error: Could not save book"
+ * }
+ * 
+ */
+
+router.post('/book', restricted, (req, res) =>
+{
+    if(!req.body.bookId)
+    {
+        res.status(400).json({ errorMessage: "requires a bookId" })
+    }
+    else
+    {
+        Auth.findBy({username: req.user.username})
+        .then(response =>
+            {
+                Users.addBookByUserId(response[0].id, req.body.bookId)
+                .then(bookResponse =>
+                    {
+                        res.status(200).json(bookResponse)
+                    })
+                .catch(err =>
+                    {
+                        console.log(err)
+                        res.status(500).json(err)
+                    })
+            })
+    }
+})
+
 module.exports = router

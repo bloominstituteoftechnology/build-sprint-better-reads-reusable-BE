@@ -3,6 +3,8 @@ const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Users = require('./authModel')
 const cors = require('cors')
+const duplicateUser = require('../utils/duplicateUser')
+
 
 router.use(cors())
 
@@ -14,13 +16,14 @@ router.use(cors())
  * @apiParam {String} username The username of the new user
  * @apiParam {String} password The password of the new user
  * 
- * @apiSuccess (201) {Object} user An object with the user id and username
+ * @apiSuccess (201) {Object} user An object with the user id and username and token
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 201 OK
  * {
  *  "id": 8,
- *  "username": "doctest"
+ *  "username": "doctest",
+ *  "token": "slkvujh3872rgvyhoru8iyghr897fghrgo8y7ghv8orgh07h"
  * }
  * 
  * @apiError (400) {Object} bad-request-error The username or password is missing.
@@ -48,15 +51,11 @@ router.use(cors())
  * 
  */
 
-router.post('/register', (req, res) =>
+router.post('/register', duplicateUser, (req, res) =>
 {
     if(!req.body.username || !req.body.password)
     {
         res.status(400).json({ errorMessage: "Missing username or password" })
-    }
-    else if(Users.findBy({username: req.body.username}))
-    {
-        res.status(409).json({ errorMessage: "That username is already registered" })
     }
     else
     {
@@ -69,7 +68,19 @@ router.post('/register', (req, res) =>
                 Users.add({username, password: hash})
                     .then(response =>
                         {
-                            res.status(201).json({ id: response.id, username: response.username })
+                            Users.findBy({ username: response.username }).first()
+                            .then(user =>
+                                {
+                                    bcryptjs.compare(password, user.password, function(err, response)
+                                    {
+                                        if(response)
+                                        {
+                                            const token = generateToken(user)
+                                            res.status(201).json({ id: user.id, username: user.username, token: token })
+                                        }
+                                        else res.status(401).json({ errorMessage: 'Invalid Credentials' })
+                                    })
+                                })
                         })
                     .catch(error =>
                         {
