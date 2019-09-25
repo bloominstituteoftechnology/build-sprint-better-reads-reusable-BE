@@ -742,7 +742,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Book-Put-Example:",
-          "content": "{\n \"bookId\": 6,\n \"read\": true\n}",
+          "content": "{ \n\t \"bookId\": 7,\n\t \"changes\": {\"read\": true}\n}",
           "type": "json"
         }
       ]

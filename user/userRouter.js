@@ -429,9 +429,9 @@ router.delete('/book', restricted, (req, res) =>
  * @apiParam {Boolean} read The boolean of whether the book has been read or not
  * 
  * @apiParamExample {json} Book-Put-Example:
- * {
- *  "bookId": 6,
- *  "read": true
+ * { 
+ * 	 "bookId": 7,
+ * 	 "changes": {"read": true}
  * }
  * 
  * @apiSuccess (200) {Object} Success The updated book for the user
