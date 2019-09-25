@@ -171,7 +171,7 @@ router.get('/', restricted, (req, res) =>
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * {
- *   "description": "a book about mars",
+ *   "description": "A book about mars",
  *   "books": [
  *     {
  *       "id": 7,
