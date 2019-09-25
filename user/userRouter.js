@@ -171,32 +171,42 @@ router.get('/', restricted, (req, res) =>
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * {
- *   "description": "a book about something",
+ *   "description": "a book about mars",
  *   "books": [
  *     {
- *       "id": 4,
- *       "title": "Pathfinder 2nd Edition",
- *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter"
+ *       "id": 7,
+ *       "title": "Calculus",
+ *       "authors": "Michael Spivak",
+ *       "rating": 3.5,
+ *       "ISBN": "565156416515648"
  *     },
  *     {
- *       "id": 2,
- *       "title": "Webster's Dictionary",
- *       "authors": "Webster"
- *     },
- *     {
- *       "id": 6,
- *       "title": "Red Planet",
- *       "authors": "Robert Heinlien"
+ *       "id": 3,
+ *       "title": "Javascript Data Structures and Algorithms",
+ *       "authors": "Sammie Bae",
+ *       "rating": 1.5,
+ *       "ISBN": "574554681541"
  *     },
  *     {
  *       "id": 5,
  *       "title": "Harry Potter and the Half-Blood Prince",
- *       "authors": "J.K. Rowling"
+ *       "authors": "J.K. Rowling",
+ *       "rating": 5,
+ *       "ISBN": "4505406540650"
  *     },
  *     {
- *       "id": 7,
- *       "title": "Calculus",
- *       "authors": "Michael Spivak"
+ *       "id": 1,
+ *       "title": "Coffee Table Book About Coffee Tables",
+ *       "authors": "Cosmo Kramer",
+ *       "rating": 5,
+ *       "ISBN": "658716874168"
+ *     },
+ *     {
+ *       "id": 4,
+ *       "title": "Pathfinder 2nd Edition",
+ *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *       "rating": null,
+ *       "ISBN": null
  *     }
  *   ]
  * }
