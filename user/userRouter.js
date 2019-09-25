@@ -189,7 +189,11 @@ router.get('/', restricted, (req, res) =>
  * {
  *  "errorMessage": "Missing description"
  * }
- * 
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
  * @apiError (401) {Object} unauthorized-error The user sent an invalid token
  * 
  * @apiErrorExample 401-Error-Response:
@@ -283,7 +287,11 @@ router.post('/description', restricted, (req, res) =>
  * {
  *  "errorMessage": "requires a bookId"
  * }
- * 
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
  * @apiError (401) {Object} unauthorized-error The user sent an invalid token
  * 
  * @apiErrorExample 401-Error-Response:
@@ -361,6 +369,11 @@ router.post('/book', restricted, (req, res) =>
  * {
  *  "errorMessage": "requires a bookId"
  * }
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
  * 
  * @apiError (401) {Object} unauthorized-error The user sent an invalid token
  * 
@@ -371,8 +384,8 @@ router.post('/book', restricted, (req, res) =>
  * }
  * 
  * @apiError (404) {String} No-Book-Error A message that the book was not saved for the user
- * @apiErrorExample Error-Response-Book-Not-In-List:
- * HTTP/1.1 200 OK
+ * @apiErrorExample 404-Error-Response-No-Book:
+ * HTTP/1.1 404 Not Found
  * {
  *   "message": "Book is not in list"
  * }
@@ -449,6 +462,11 @@ router.delete('/book', restricted, (req, res) =>
  * {
  *  "errorMessage": "requires a bookId"
  * }
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
  * 
  * @apiError (401) {Object} unauthorized-error The user sent an invalid token
  * 
@@ -459,8 +477,8 @@ router.delete('/book', restricted, (req, res) =>
  * }
  * 
  * @apiError (404) {String} No-Book-Error A message that the book was not saved for the user
- * @apiErrorExample Error-Response-Book-Not-In-List:
- * HTTP/1.1 200 OK
+ * @apiErrorExample 404-Error-Response-No-Book:
+ * HTTP/1.1 404 Not Found
  * {
  *   "message": "Book is not in list"
  * }
@@ -500,6 +518,96 @@ router.put('/book', restricted, (req, res) =>
     }
 })
 
+/**
+ * @api {delete} /api/user/description Delete Description
+ * @apiName DeleteDescription
+ * @apiGroup User
+ * 
+ * @apiHeader {json} authorization The json web token, sent to the server
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+    "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Integer} descriptionId The id of the description you want to delete
+ * 
+ * @apiParamExample {json} Description-Delete-Example:
+ * {
+ *  "descriptionId": 8
+ * }
+ * 
+ * @apiSuccess (200) {String} Success A message about deleting the description from the user
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Deleted description 8 from user 2"
+ * }
+ * 
+ * @apiError (400) {Object} bad-request-error The descriptionId or token is absent
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "errorMessage": "requires a descriptionId"
+ * }
+ * @apiErrorExample 400-Error-Response-No-Token:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "errorMessage": "No credentials provided"
+ * }
+ * 
+ * @apiError (401) {Object} unauthorized-error The user sent an invalid token
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Unauthorized
+ * {
+ *  "errorMessage": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {String} No-Description-Error A message that the description was not saved for the user
+ * @apiErrorExample 404-Error-Response-No-Desc:
+ * HTTP/1.1 404 Not Found
+ * {
+ *   "message": "Description is not in list"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Error in deleting description
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "errorMessage": "Internal Error: Could not delete description"
+ * }
+ * 
+ */
+
+router.delete('/description', restricted, (req, res) =>
+{
+    if(!req.body.descriptionId)
+    {
+        res.status(400).json({ errorMessage: "requires a descriptionId" })
+    }
+    else
+    {
+        Auth.findBy({username: req.user.username})
+        .then(response =>
+            {
+                Users.removeDescByUserId(response[0].id, req.body.descriptionId)
+                .then(descResponse =>
+                    {
+                        res.status(descResponse.code).json({message: descResponse.message})
+                    })
+                .catch(err =>
+                    {
+                        console.log(err)
+                        res.status(500).json({errorMessage: "Internal Error: Could not delete description"})
+                    })
+            })
+    }
+})
 
 
 module.exports = router

@@ -4,15 +4,14 @@ module.exports =
 {
     getBooksByUserId,
     getDescriptionsByUserId,
-    // removeDescription,
     getUserWithBooksAndDesc,
     randomBooks,
     addBook,
-    // addDescription,
     addUserDescWithBookResults,
     addBookByUserId,
     removeBookByUserId,
-    updateBookByUserId
+    updateBookByUserId,
+    removeDescByUserId
 }
 
 function getBooksByUserId(id)
@@ -154,5 +153,16 @@ async function updateBookByUserId(userId, bookId, changes)
     {
         await db('users-books').where({'user_id': userId, 'book_id': bookId}).update(changes)
         return {message: `Updated book ${bookId} for user ${userId}`, code: 200}
+    }
+}
+
+async function removeDescByUserId(userId, descriptionId)
+{
+    let descInList = await db('users-descriptions').where({'user_id': userId, 'description_id': descriptionId}).first()
+    if (!descInList) return {message: 'Description is not in list', code: 404}
+    else 
+    {
+        await db('users-descriptions').where({'user_id': userId, 'description_id': descriptionId}).del()
+        return {message: `Deleted description ${descriptionId} from user ${userId}`, code: 200}
     }
 }
