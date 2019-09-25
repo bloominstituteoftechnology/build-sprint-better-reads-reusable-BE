@@ -354,13 +354,6 @@ router.post('/book', restricted, (req, res) =>
  *   "message": "Deleted book 6 from user 2"
  * }
  * 
- * @apiSuccess (200) {String} Success A message that the book was not saved for the user
- * @apiSuccessExample Success-Response-Book-Not-In-List:
- * HTTP/1.1 200 OK
- * {
- *   "message": "Book is not in list"
- * }
- * 
  * @apiError (400) {Object} bad-request-error The bookId or token is absent
  * 
  * @apiErrorExample 400-Error-Response:
@@ -376,6 +369,14 @@ router.post('/book', restricted, (req, res) =>
  * {
  *  "errorMessage": "Invalid Credentials"
  * }
+ * 
+ * @apiError (404) {String} No-Book-Error A message that the book was not saved for the user
+ * @apiErrorExample Error-Response-Book-Not-In-List:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Book is not in list"
+ * }
+ * 
  * @apiError (500) {Object} internal-server-error Error in deleting book
  * 
  * @apiErrorExample 500-Error-Response:
@@ -400,7 +401,7 @@ router.delete('/book', restricted, (req, res) =>
                 Users.removeBookByUserId(response[0].id, req.body.bookId)
                 .then(bookResponse =>
                     {
-                        res.status(200).json({message: bookResponse})
+                        res.status(bookResponse.code).json({message: bookResponse.message})
                     })
                 .catch(err =>
                     {
@@ -411,6 +412,93 @@ router.delete('/book', restricted, (req, res) =>
     }
 })
 
+/**
+ * @api {put} /api/user/book Put Book
+ * @apiName PutBook
+ * @apiGroup User
+ * 
+ * @apiHeader {json} authorization The json web token, sent to the server
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+    "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Integer} bookId The id of the book you want to delete
+ * @apiParam {Boolean} bookRead The boolean of whether the book has been read or not
+ * 
+ * @apiParamExample {json} Book-Put-Example:
+ * {
+ *  "bookId": 6,
+ *  "read": true
+ * }
+ * 
+ * @apiSuccess (200) {Object} Success The updated book for the user
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Updated book 6 for user 2"
+ * }
+ * 
+ * @apiError (400) {Object} bad-request-error The bookId or token is absent
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "errorMessage": "requires a bookId"
+ * }
+ * 
+ * @apiError (401) {Object} unauthorized-error The user sent an invalid token
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Unauthorized
+ * {
+ *  "errorMessage": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {String} No-Book-Error A message that the book was not saved for the user
+ * @apiErrorExample Error-Response-Book-Not-In-List:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Book is not in list"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Error in updating book
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "errorMessage": "Internal Error: Could not update book"
+ * }
+ * 
+ */
+
+router.put('/book', restricted, (req, res) =>
+{
+    if(!req.body.bookId || !req.body.changes)
+    {
+        res.status(400).json({ errorMessage: "requires a bookId and changes for the book" })
+    }
+    else
+    {
+        Auth.findBy({username: req.user.username})
+        .then(response =>
+            {
+                Users.updateBookByUserId(response[0].id, req.body.bookId, req.body.changes)
+                .then(bookResponse =>
+                    {
+                        res.status(bookResponse.code).json({message: bookResponse.message})
+                    })
+                .catch(err =>
+                    {
+                        console.log(err)
+                        res.status(500).json({errorMessage: "Internal Error: Could not update book"})
+                    })
+            })
+    }
+})
 
 
 
