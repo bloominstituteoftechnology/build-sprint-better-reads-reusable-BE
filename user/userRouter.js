@@ -24,28 +24,40 @@ router.use(cors())
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * {
- *   "username": "bob",
- *   "id": 1,
+ *   "username": "amy",
+ *   "id": 2,
  *   "books": [
  *     {
- *       "title": "Webster's Dictionary",
- *       "authors": "Webster"
+ *       "title": "Coffee Table Book About Coffee Tables",
+ *       "authors": "Cosmo Kramer",
+ *       "id": 1,
+ *       "read": 0
  *     },
  *     {
  *       "title": "Javascript Data Structures and Algorithms",
- *       "authors": "Sammie Bae"
+ *       "authors": "Sammie Bae",
+ *       "id": 3,
+ *       "read": 0
+ *     },
+ *     {
+ *       "title": "Pathfinder 2nd Edition",
+ *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *       "id": 4,
+ *       "read": 0
  *     }
  *   ],
  *   "descriptions": [
  *     {
- *       "description": "A book to tell you the meanings of words",
- *       "id": 2,
+ *       "description": "A book to set on a table, and maybe it's self-referential",
+ *       "id": 1,
  *       "books": [
  *         {
- *           "title": "Webster's Dictionary"
+ *           "title": "Coffee Table Book About Coffee Tables",
+ *           "id": 1
  *         },
  *         {
- *           "title": "Pathfinder 2nd Edition"
+ *           "title": "Webster's Dictionary",
+ *           "id": 2
  *         }
  *       ]
  *     },
@@ -54,7 +66,18 @@ router.use(cors())
  *       "id": 3,
  *       "books": [
  *         {
- *           "title": "Javascript Data Structures and Algorithms"
+ *           "title": "Javascript Data Structures and Algorithms",
+ *           "id": 3
+ *         }
+ *       ]
+ *     },
+ *     {
+ *       "description": "A book about playing games with dragons and such",
+ *       "id": 4,
+ *       "books": [
+ *         {
+ *           "title": "Pathfinder 2nd Edition",
+ *           "id": 4
  *         }
  *       ]
  *     }
@@ -302,5 +325,93 @@ router.post('/book', restricted, (req, res) =>
             })
     }
 })
+
+/**
+ * @api {delete} /api/user/book Delete Book
+ * @apiName DeleteBook
+ * @apiGroup User
+ * 
+ * @apiHeader {json} authorization The json web token, sent to the server
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+    "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Integer} bookId The id of the book you want to delete
+ * 
+ * @apiParamExample {json} Book-Delete-Example:
+ * {
+ *  "bookId": 6
+ * }
+ * 
+ * @apiSuccess (200) {String} Success A message about deleting the book from the user
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Deleted book 6 from user 2"
+ * }
+ * 
+ * @apiSuccess (200) {String} Success A message that the book was not saved for the user
+ * @apiSuccessExample Success-Response-Book-Not-In-List:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Book is not in list"
+ * }
+ * 
+ * @apiError (400) {Object} bad-request-error The bookId or token is absent
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "errorMessage": "requires a bookId"
+ * }
+ * 
+ * @apiError (401) {Object} unauthorized-error The user sent an invalid token
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Unauthorized
+ * {
+ *  "errorMessage": "Invalid Credentials"
+ * }
+ * @apiError (500) {Object} internal-server-error Error in deleting book
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "errorMessage": "Internal Error: Could not delete book"
+ * }
+ * 
+ */
+
+router.delete('/book', restricted, (req, res) =>
+{
+    if(!req.body.bookId)
+    {
+        res.status(400).json({ errorMessage: "requires a bookId" })
+    }
+    else
+    {
+        Auth.findBy({username: req.user.username})
+        .then(response =>
+            {
+                Users.removeBookByUserId(response[0].id, req.body.bookId)
+                .then(bookResponse =>
+                    {
+                        res.status(200).json({message: bookResponse})
+                    })
+                .catch(err =>
+                    {
+                        console.log(err)
+                        res.status(500).json({errorMessage: "Internal Error: Could not delete book"})
+                    })
+            })
+    }
+})
+
+
+
 
 module.exports = router
