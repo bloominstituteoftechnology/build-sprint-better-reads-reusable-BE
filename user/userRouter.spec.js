@@ -57,6 +57,29 @@ describe('Post /api/description', () =>
     })
 })
 
+describe('Post /api/book', () =>
+{
+    it('returns a book id, with a 200 status', async () =>
+    {
+        const book = 
+        {
+            title: "testBook",
+            authors: "testAuthor 1, testAuthor2"
+        }
+        let [id] = await db('books').insert(book)
+        restricted.mockImplementationOnce((req, res, next) =>
+        {
+            req.user = {username: "amy"}
+            next()
+        })
+        const res = await request(server)
+            .post('/api/user/book')
+            .send({"bookId": id})
+        expect(res.body).toBe(id)
+        expect(res.status).toBe(200)
+
+    })
+})
 
 // expect(restrict).toBeCalled()
 
