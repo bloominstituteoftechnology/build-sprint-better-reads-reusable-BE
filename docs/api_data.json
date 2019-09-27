@@ -394,14 +394,14 @@
             "type": "Integer",
             "optional": false,
             "field": "descriptionId",
-            "description": "<p>The id of the descriptioon you want to delete as a param on the url</p>"
+            "description": "<p>The id of the description you want to delete as a param on the url</p>"
           }
         ]
       },
       "examples": [
         {
-          "title": "Book-Delete-Example:",
-          "content": "https://better-reads-bw.herokuapp.com/api/user/book/7",
+          "title": "Description-Delete-Example:",
+          "content": "https://better-reads-bw.herokuapp.com/api/user/description/7",
           "type": "URL"
         }
       ]
