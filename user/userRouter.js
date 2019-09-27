@@ -298,14 +298,41 @@ router.post('/description', restricted, (req, res) =>
  * 
  * @apiParamExample {json} Book-Save-Example:
  * {
- *  "bookId": 7
+ * 	"bookId": 8
  * }
  * 
- * @apiSuccess (200) {Integer} Success The id of the saved book
+ * @apiSuccess (200) {Object} Success Object containing the updated books of the user
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
- * 7
+ * {
+ *   "books": [
+ *     {
+ *       "title": "Coffee Table Book About Coffee Tables",
+ *       "authors": "Cosmo Kramer",
+ *       "id": 1,
+ *       "rating": 5,
+ *       "ISBN": "658716874168",
+ *       "read": 0
+ *     },
+ *     {
+ *       "title": "Pathfinder 2nd Edition",
+ *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *       "id": 4,
+ *       "rating": null,
+ *       "ISBN": null,
+ *       "read": 0
+ *     },
+ *     {
+ *       "title": "Quantum Theory",
+ *       "authors": "David Bohm",
+ *       "id": 8,
+ *       "rating": 3,
+ *       "ISBN": "6546878498468784",
+ *       "read": 0
+ *     }
+ *   ]
+ * }
  * 
  * @apiSuccess (200) {Integer} Success Id 0, the book is already saved
  * @apiSuccessExample Success-Response-Book-Already-Added:
@@ -355,7 +382,11 @@ router.post('/book', restricted, (req, res) =>
                 Users.addBookByUserId(response[0].id, req.body.bookId)
                 .then(bookResponse =>
                     {
-                        res.status(200).json({bookResponse: bookResponse, incReq: req.body})
+                        Users.getBooksByUserId(response[0].id)
+                        .then(bookList =>
+                            {
+                                res.status(200).json({books: bookList})
+                            })
                     })
                 .catch(err =>
                     {
@@ -382,14 +413,31 @@ router.post('/book', restricted, (req, res) =>
  * @apiParam {Integer} bookId The id of the book you want to delete as a param on the url
  * 
  * @apiParamExample {URL} Book-Delete-Example:
- * https://better-reads-bw.herokuapp.com/api/user/book/7
+ * https://better-reads-bw.herokuapp.com/api/user/book/8
  * 
- * @apiSuccess (200) {String} Success A message about deleting the book from the user
+ * @apiSuccess (200) {Object} Success Object containing the user's remaining books
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * {
- *   "message": "Deleted book 6 from user 2"
+ *   "bookList": [
+ *     {
+ *       "title": "Coffee Table Book About Coffee Tables",
+ *       "authors": "Cosmo Kramer",
+ *       "id": 1,
+ *       "rating": 5,
+ *       "ISBN": "658716874168",
+ *       "read": 0
+ *     },
+ *     {
+ *       "title": "Pathfinder 2nd Edition",
+ *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *       "id": 4,
+ *       "rating": null,
+ *       "ISBN": null,
+ *       "read": 0
+ *     }
+ *   ]
  * }
  * 
  * @apiError (400) {Object} bad-request-error The bookId or token is absent
@@ -444,7 +492,11 @@ router.delete('/book/:id', restricted, (req, res) =>
                 Users.removeBookByUserId(response[0].id, req.params.id)
                 .then(bookResponse =>
                     {
-                        res.status(bookResponse.code).json({message: bookResponse.message})
+                        Users.getBooksByUserId(response[0].id)
+                        .then(list =>
+                            {
+                                res.status(bookResponse.code).json({bookList: list})
+                            })
                     })
                 .catch(err =>
                     {
@@ -473,18 +525,34 @@ router.delete('/book/:id', restricted, (req, res) =>
  * 
  * @apiParamExample {json} Book-Put-Example:
  * { 
- * 	 "bookId": 7,
+ * 	 "bookId": 4,
  * 	 "changes": {"read": true}
  * }
  * 
- * @apiSuccess (200) {Object} Success The updated book for the user
+ * @apiSuccess (200) {Object} Success The updated booklist for the user
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * {
- *   "message": "Updated book 6 for user 2"
+ *   "books": [
+ *     {
+ *       "title": "Coffee Table Book About Coffee Tables",
+ *       "authors": "Cosmo Kramer",
+ *       "id": 1,
+ *       "rating": 5,
+ *       "ISBN": "658716874168",
+ *       "read": 0
+ *     },
+ *     {
+ *       "title": "Pathfinder 2nd Edition",
+ *       "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *       "id": 4,
+ *       "rating": null,
+ *       "ISBN": null,
+ *       "read": 1
+ *     }
+ *   ]
  * }
- * 
  * @apiError (400) {Object} bad-request-error The bookId or token is absent
  * 
  * @apiErrorExample 400-Error-Response:
@@ -537,7 +605,11 @@ router.put('/book', restricted, (req, res) =>
                 Users.updateBookByUserId(response[0].id, req.body.bookId, req.body.changes)
                 .then(bookResponse =>
                     {
-                        res.status(bookResponse.code).json({message: bookResponse.message})
+                        Users.getBooksByUserId(response[0].id)
+                        .then(bookList =>
+                            {
+                                res.status(bookResponse.code).json({books: bookList})
+                            })
                     })
                 .catch(err =>
                     {
@@ -564,17 +636,43 @@ router.put('/book', restricted, (req, res) =>
  * @apiParam {Integer} descriptionId The id of the description you want to delete as a param on the url
  * 
  * @apiParamExample {URL} Description-Delete-Example:
- * https://better-reads-bw.herokuapp.com/api/user/description/7
+ * https://better-reads-bw.herokuapp.com/api/user/description/1
  * 
  * 
- * @apiSuccess (200) {String} Success A message about deleting the description from the user
+ * @apiSuccess (200) {Object} Success An object containing the remaining descriptions for the user
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * {
- *   "message": "Deleted description 8 from user 2"
+ *   "descriptions": [
+ *     {
+ *       "description": "A book about some kind of Javascript structures or methods for problem solving",
+ *       "id": 3,
+ *       "books": [
+ *         {
+ *           "id": 3,
+ *           "title": "Javascript Data Structures and Algorithms",
+ *           "authors": "Sammie Bae",
+ *           "rating": 1.5,
+ *           "ISBN": "574554681541"
+ *         }
+ *       ]
+ *     },
+ *     {
+ *       "description": "A book about playing games with dragons and such",
+ *       "id": 4,
+ *       "books": [
+ *         {
+ *           "id": 4,
+ *           "title": "Pathfinder 2nd Edition",
+ *           "authors": "Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter",
+ *           "rating": null,
+ *           "ISBN": null
+ *         }
+ *       ]
+ *     }
+ *   ]
  * }
- * 
  * @apiError (400) {Object} bad-request-error The descriptionId or token is absent
  * 
  * @apiErrorExample 400-Error-Response:
@@ -627,7 +725,11 @@ router.delete('/description/:id', restricted, (req, res) =>
                 Users.removeDescByUserId(response[0].id, req.params.id)
                 .then(descResponse =>
                     {
-                        res.status(descResponse.code).json({message: descResponse.message})
+                        Users.getDescriptionsByUserId(response[0].id)
+                        .then(descList =>
+                            {
+                                res.status(descResponse.code).json({descriptions: descList})
+                            })
                     })
                 .catch(err =>
                     {

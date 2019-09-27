@@ -264,7 +264,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Book-Delete-Example:",
-          "content": "https://better-reads-bw.herokuapp.com/api/user/book/7",
+          "content": "https://better-reads-bw.herokuapp.com/api/user/book/8",
           "type": "URL"
         }
       ]
@@ -274,17 +274,17 @@ define({ "api": [
         "200": [
           {
             "group": "200",
-            "type": "String",
+            "type": "Object",
             "optional": false,
             "field": "Success",
-            "description": "<p>A message about deleting the book from the user</p>"
+            "description": "<p>Object containing the user's remaining books</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Deleted book 6 from user 2\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"bookList\": [\n    {\n      \"title\": \"Coffee Table Book About Coffee Tables\",\n      \"authors\": \"Cosmo Kramer\",\n      \"id\": 1,\n      \"rating\": 5,\n      \"ISBN\": \"658716874168\",\n      \"read\": 0\n    },\n    {\n      \"title\": \"Pathfinder 2nd Edition\",\n      \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n      \"id\": 4,\n      \"rating\": null,\n      \"ISBN\": null,\n      \"read\": 0\n    }\n  ]\n}",
           "type": "json"
         }
       ]
@@ -401,7 +401,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Description-Delete-Example:",
-          "content": "https://better-reads-bw.herokuapp.com/api/user/description/7",
+          "content": "https://better-reads-bw.herokuapp.com/api/user/description/1",
           "type": "URL"
         }
       ]
@@ -411,17 +411,17 @@ define({ "api": [
         "200": [
           {
             "group": "200",
-            "type": "String",
+            "type": "Object",
             "optional": false,
             "field": "Success",
-            "description": "<p>A message about deleting the description from the user</p>"
+            "description": "<p>An object containing the remaining descriptions for the user</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Deleted description 8 from user 2\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"descriptions\": [\n    {\n      \"description\": \"A book about some kind of Javascript structures or methods for problem solving\",\n      \"id\": 3,\n      \"books\": [\n        {\n          \"id\": 3,\n          \"title\": \"Javascript Data Structures and Algorithms\",\n          \"authors\": \"Sammie Bae\",\n          \"rating\": 1.5,\n          \"ISBN\": \"574554681541\"\n        }\n      ]\n    },\n    {\n      \"description\": \"A book about playing games with dragons and such\",\n      \"id\": 4,\n      \"books\": [\n        {\n          \"id\": 4,\n          \"title\": \"Pathfinder 2nd Edition\",\n          \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n          \"rating\": null,\n          \"ISBN\": null\n        }\n      ]\n    }\n  ]\n}",
           "type": "json"
         }
       ]
@@ -636,7 +636,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Book-Save-Example:",
-          "content": "{\n \"bookId\": 7\n}",
+          "content": "{\n\t\"bookId\": 8\n}",
           "type": "json"
         }
       ]
@@ -646,17 +646,17 @@ define({ "api": [
         "200": [
           {
             "group": "200",
-            "type": "Integer",
+            "type": "Object",
             "optional": false,
             "field": "Success",
-            "description": "<p>The id of the saved book</p>"
+            "description": "<p>Object containing the updated books of the user</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n7",
+          "content": "HTTP/1.1 200 OK\n{\n  \"books\": [\n    {\n      \"title\": \"Coffee Table Book About Coffee Tables\",\n      \"authors\": \"Cosmo Kramer\",\n      \"id\": 1,\n      \"rating\": 5,\n      \"ISBN\": \"658716874168\",\n      \"read\": 0\n    },\n    {\n      \"title\": \"Pathfinder 2nd Edition\",\n      \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n      \"id\": 4,\n      \"rating\": null,\n      \"ISBN\": null,\n      \"read\": 0\n    },\n    {\n      \"title\": \"Quantum Theory\",\n      \"authors\": \"David Bohm\",\n      \"id\": 8,\n      \"rating\": 3,\n      \"ISBN\": \"6546878498468784\",\n      \"read\": 0\n    }\n  ]\n}",
           "type": "json"
         },
         {
@@ -894,7 +894,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Book-Put-Example:",
-          "content": "{ \n\t \"bookId\": 7,\n\t \"changes\": {\"read\": true}\n}",
+          "content": "{ \n\t \"bookId\": 4,\n\t \"changes\": {\"read\": true}\n}",
           "type": "json"
         }
       ]
@@ -907,14 +907,14 @@ define({ "api": [
             "type": "Object",
             "optional": false,
             "field": "Success",
-            "description": "<p>The updated book for the user</p>"
+            "description": "<p>The updated booklist for the user</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Updated book 6 for user 2\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"books\": [\n    {\n      \"title\": \"Coffee Table Book About Coffee Tables\",\n      \"authors\": \"Cosmo Kramer\",\n      \"id\": 1,\n      \"rating\": 5,\n      \"ISBN\": \"658716874168\",\n      \"read\": 0\n    },\n    {\n      \"title\": \"Pathfinder 2nd Edition\",\n      \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n      \"id\": 4,\n      \"rating\": null,\n      \"ISBN\": null,\n      \"read\": 1\n    }\n  ]\n}",
           "type": "json"
         }
       ]
