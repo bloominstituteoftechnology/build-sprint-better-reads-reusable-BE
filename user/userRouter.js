@@ -345,7 +345,7 @@ router.post('/book', restricted, (req, res) =>
 {
     if(!req.body.bookId)
     {
-        res.status(400).json({ errorMessage: "requires a bookId" })
+        res.status(400).json({ errorMessage: "requires a bookId", incReq: req.body})
     }
     else
     {
@@ -355,7 +355,7 @@ router.post('/book', restricted, (req, res) =>
                 Users.addBookByUserId(response[0].id, req.body.bookId)
                 .then(bookResponse =>
                     {
-                        res.status(200).json(bookResponse)
+                        res.status(200).json({bookResponse: bookResponse, incReq: req.body})
                     })
                 .catch(err =>
                     {
@@ -367,7 +367,7 @@ router.post('/book', restricted, (req, res) =>
 })
 
 /**
- * @api {delete} /api/user/book Delete Book
+ * @api {delete} /api/user/book/:id Delete Book
  * @apiName DeleteBook
  * @apiGroup User
  * 
@@ -379,12 +379,10 @@ router.post('/book', restricted, (req, res) =>
     "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiParam {Integer} bookId The id of the book you want to delete
+ * @apiParam {Integer} bookId The id of the book you want to delete as a param on the url
  * 
- * @apiParamExample {json} Book-Delete-Example:
- * {
- *  "bookId": 6
- * }
+ * @apiParamExample {URL} Book-Delete-Example:
+ * https://better-reads-bw.herokuapp.com/api/user/book/7
  * 
  * @apiSuccess (200) {String} Success A message about deleting the book from the user
  * 
@@ -432,18 +430,18 @@ router.post('/book', restricted, (req, res) =>
  * 
  */
 
-router.delete('/book', restricted, (req, res) =>
+router.delete('/book/:id', restricted, (req, res) =>
 {
-    if(!req.body.bookId)
+    if(!req.params.id)
     {
-        res.status(400).json({ errorMessage: "requires a bookId" })
+        res.status(400).json({ errorMessage: "requires a bookId", incReq: req.params.id})
     }
     else
     {
         Auth.findBy({username: req.user.username})
         .then(response =>
             {
-                Users.removeBookByUserId(response[0].id, req.body.bookId)
+                Users.removeBookByUserId(response[0].id, req.params.id)
                 .then(bookResponse =>
                     {
                         res.status(bookResponse.code).json({message: bookResponse.message})
@@ -551,7 +549,7 @@ router.put('/book', restricted, (req, res) =>
 })
 
 /**
- * @api {delete} /api/user/description Delete Description
+ * @api {delete} /api/user/description/:id Delete Description
  * @apiName DeleteDescription
  * @apiGroup User
  * 
@@ -563,12 +561,11 @@ router.put('/book', restricted, (req, res) =>
     "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiParam {Integer} descriptionId The id of the description you want to delete
+ * @apiParam {Integer} descriptionId The id of the descriptioon you want to delete as a param on the url
  * 
- * @apiParamExample {json} Description-Delete-Example:
- * {
- *  "descriptionId": 8
- * }
+ * @apiParamExample {URL} Book-Delete-Example:
+ * https://better-reads-bw.herokuapp.com/api/user/book/7
+ * 
  * 
  * @apiSuccess (200) {String} Success A message about deleting the description from the user
  * 
@@ -616,9 +613,9 @@ router.put('/book', restricted, (req, res) =>
  * 
  */
 
-router.delete('/description', restricted, (req, res) =>
+router.delete('/description/:id', restricted, (req, res) =>
 {
-    if(!req.body.descriptionId)
+    if(!req.params.descriptionId)
     {
         res.status(400).json({ errorMessage: "requires a descriptionId" })
     }
@@ -627,7 +624,7 @@ router.delete('/description', restricted, (req, res) =>
         Auth.findBy({username: req.user.username})
         .then(response =>
             {
-                Users.removeDescByUserId(response[0].id, req.body.descriptionId)
+                Users.removeDescByUserId(response[0].id, req.params.descriptionId)
                 .then(descResponse =>
                     {
                         res.status(descResponse.code).json({message: descResponse.message})
