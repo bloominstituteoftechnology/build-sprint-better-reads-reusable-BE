@@ -432,18 +432,18 @@ router.post('/book', restricted, (req, res) =>
  * 
  */
 
-router.delete('/book', restricted, (req, res) =>
+router.delete('/book/:id', restricted, (req, res) =>
 {
-    if(!req.body.bookId)
+    if(!req.params.id)
     {
-        res.status(400).json({ errorMessage: "requires a bookId", incReq: req.body})
+        res.status(400).json({ errorMessage: "requires a bookId", incReq: req.params.id})
     }
     else
     {
         Auth.findBy({username: req.user.username})
         .then(response =>
             {
-                Users.removeBookByUserId(response[0].id, req.body.bookId)
+                Users.removeBookByUserId(response[0].id, req.params.id)
                 .then(bookResponse =>
                     {
                         res.status(bookResponse.code).json({message: bookResponse.message})
