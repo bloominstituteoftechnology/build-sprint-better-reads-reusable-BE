@@ -355,7 +355,7 @@ router.post('/book', restricted, (req, res) =>
                 Users.addBookByUserId(response[0].id, req.body.bookId)
                 .then(bookResponse =>
                     {
-                        res.status(200).json(bookResponse)
+                        res.status(200).json({bookResponse: bookResponse, incReq: req.body})
                     })
                 .catch(err =>
                     {
