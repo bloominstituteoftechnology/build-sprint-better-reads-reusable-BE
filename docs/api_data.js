@@ -225,7 +225,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/api/user/book",
+    "url": "/api/user/book/:id",
     "title": "Delete Book",
     "name": "DeleteBook",
     "group": "User",
@@ -257,15 +257,15 @@ define({ "api": [
             "type": "Integer",
             "optional": false,
             "field": "bookId",
-            "description": "<p>The id of the book you want to delete</p>"
+            "description": "<p>The id of the book you want to delete as a param on the url</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Book-Delete-Example:",
-          "content": "{\n \"bookId\": 6\n}",
-          "type": "json"
+          "content": "https://better-reads-bw.herokuapp.com/api/user/book/8",
+          "type": "URL"
         }
       ]
     },
@@ -274,17 +274,17 @@ define({ "api": [
         "200": [
           {
             "group": "200",
-            "type": "String",
+            "type": "Object",
             "optional": false,
             "field": "Success",
-            "description": "<p>A message about deleting the book from the user</p>"
+            "description": "<p>Object containing the user's remaining books</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Deleted book 6 from user 2\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"bookList\": [\n    {\n      \"title\": \"Coffee Table Book About Coffee Tables\",\n      \"authors\": \"Cosmo Kramer\",\n      \"id\": 1,\n      \"rating\": 5,\n      \"ISBN\": \"658716874168\",\n      \"read\": 0\n    },\n    {\n      \"title\": \"Pathfinder 2nd Edition\",\n      \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n      \"id\": 4,\n      \"rating\": null,\n      \"ISBN\": null,\n      \"read\": 0\n    }\n  ]\n}",
           "type": "json"
         }
       ]
@@ -362,7 +362,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/api/user/description",
+    "url": "/api/user/description/:id",
     "title": "Delete Description",
     "name": "DeleteDescription",
     "group": "User",
@@ -394,15 +394,15 @@ define({ "api": [
             "type": "Integer",
             "optional": false,
             "field": "descriptionId",
-            "description": "<p>The id of the description you want to delete</p>"
+            "description": "<p>The id of the description you want to delete as a param on the url</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Description-Delete-Example:",
-          "content": "{\n \"descriptionId\": 8\n}",
-          "type": "json"
+          "content": "https://better-reads-bw.herokuapp.com/api/user/description/1",
+          "type": "URL"
         }
       ]
     },
@@ -411,17 +411,17 @@ define({ "api": [
         "200": [
           {
             "group": "200",
-            "type": "String",
+            "type": "Object",
             "optional": false,
             "field": "Success",
-            "description": "<p>A message about deleting the description from the user</p>"
+            "description": "<p>An object containing the remaining descriptions for the user</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Deleted description 8 from user 2\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"descriptions\": [\n    {\n      \"description\": \"A book about some kind of Javascript structures or methods for problem solving\",\n      \"id\": 3,\n      \"books\": [\n        {\n          \"id\": 3,\n          \"title\": \"Javascript Data Structures and Algorithms\",\n          \"authors\": \"Sammie Bae\",\n          \"rating\": 1.5,\n          \"ISBN\": \"574554681541\"\n        }\n      ]\n    },\n    {\n      \"description\": \"A book about playing games with dragons and such\",\n      \"id\": 4,\n      \"books\": [\n        {\n          \"id\": 4,\n          \"title\": \"Pathfinder 2nd Edition\",\n          \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n          \"rating\": null,\n          \"ISBN\": null\n        }\n      ]\n    }\n  ]\n}",
           "type": "json"
         }
       ]
@@ -636,7 +636,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Book-Save-Example:",
-          "content": "{\n \"bookId\": 7\n}",
+          "content": "{\n\t\"bookId\": 8\n}",
           "type": "json"
         }
       ]
@@ -646,17 +646,17 @@ define({ "api": [
         "200": [
           {
             "group": "200",
-            "type": "Integer",
+            "type": "Object",
             "optional": false,
             "field": "Success",
-            "description": "<p>The id of the saved book</p>"
+            "description": "<p>Object containing the updated books of the user</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n7",
+          "content": "HTTP/1.1 200 OK\n{\n  \"books\": [\n    {\n      \"title\": \"Coffee Table Book About Coffee Tables\",\n      \"authors\": \"Cosmo Kramer\",\n      \"id\": 1,\n      \"rating\": 5,\n      \"ISBN\": \"658716874168\",\n      \"read\": 0\n    },\n    {\n      \"title\": \"Pathfinder 2nd Edition\",\n      \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n      \"id\": 4,\n      \"rating\": null,\n      \"ISBN\": null,\n      \"read\": 0\n    },\n    {\n      \"title\": \"Quantum Theory\",\n      \"authors\": \"David Bohm\",\n      \"id\": 8,\n      \"rating\": 3,\n      \"ISBN\": \"6546878498468784\",\n      \"read\": 0\n    }\n  ]\n}",
           "type": "json"
         },
         {
@@ -784,7 +784,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"description\": \"a book about mars\",\n  \"books\": [\n    {\n      \"id\": 7,\n      \"title\": \"Calculus\",\n      \"authors\": \"Michael Spivak\",\n      \"rating\": 3.5,\n      \"ISBN\": \"565156416515648\"\n    },\n    {\n      \"id\": 3,\n      \"title\": \"Javascript Data Structures and Algorithms\",\n      \"authors\": \"Sammie Bae\",\n      \"rating\": 1.5,\n      \"ISBN\": \"574554681541\"\n    },\n    {\n      \"id\": 5,\n      \"title\": \"Harry Potter and the Half-Blood Prince\",\n      \"authors\": \"J.K. Rowling\",\n      \"rating\": 5,\n      \"ISBN\": \"4505406540650\"\n    },\n    {\n      \"id\": 1,\n      \"title\": \"Coffee Table Book About Coffee Tables\",\n      \"authors\": \"Cosmo Kramer\",\n      \"rating\": 5,\n      \"ISBN\": \"658716874168\"\n    },\n    {\n      \"id\": 4,\n      \"title\": \"Pathfinder 2nd Edition\",\n      \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n      \"rating\": null,\n      \"ISBN\": null\n    }\n  ]\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"description\": \"A book about mars\",\n  \"books\": [\n    {\n      \"id\": 7,\n      \"title\": \"Calculus\",\n      \"authors\": \"Michael Spivak\",\n      \"rating\": 3.5,\n      \"ISBN\": \"565156416515648\"\n    },\n    {\n      \"id\": 3,\n      \"title\": \"Javascript Data Structures and Algorithms\",\n      \"authors\": \"Sammie Bae\",\n      \"rating\": 1.5,\n      \"ISBN\": \"574554681541\"\n    },\n    {\n      \"id\": 5,\n      \"title\": \"Harry Potter and the Half-Blood Prince\",\n      \"authors\": \"J.K. Rowling\",\n      \"rating\": 5,\n      \"ISBN\": \"4505406540650\"\n    },\n    {\n      \"id\": 1,\n      \"title\": \"Coffee Table Book About Coffee Tables\",\n      \"authors\": \"Cosmo Kramer\",\n      \"rating\": 5,\n      \"ISBN\": \"658716874168\"\n    },\n    {\n      \"id\": 4,\n      \"title\": \"Pathfinder 2nd Edition\",\n      \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n      \"rating\": null,\n      \"ISBN\": null\n    }\n  ]\n}",
           "type": "json"
         }
       ]
@@ -894,7 +894,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Book-Put-Example:",
-          "content": "{ \n\t \"bookId\": 7,\n\t \"changes\": {\"read\": true}\n}",
+          "content": "{ \n\t \"bookId\": 4,\n\t \"changes\": {\"read\": true}\n}",
           "type": "json"
         }
       ]
@@ -907,14 +907,14 @@ define({ "api": [
             "type": "Object",
             "optional": false,
             "field": "Success",
-            "description": "<p>The updated book for the user</p>"
+            "description": "<p>The updated booklist for the user</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Updated book 6 for user 2\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"books\": [\n    {\n      \"title\": \"Coffee Table Book About Coffee Tables\",\n      \"authors\": \"Cosmo Kramer\",\n      \"id\": 1,\n      \"rating\": 5,\n      \"ISBN\": \"658716874168\",\n      \"read\": 0\n    },\n    {\n      \"title\": \"Pathfinder 2nd Edition\",\n      \"authors\": \"Logan Bonner, Jason Buhlmahn, Stephen Radney-MacFarland, and Mark Seifter\",\n      \"id\": 4,\n      \"rating\": null,\n      \"ISBN\": null,\n      \"read\": 1\n    }\n  ]\n}",
           "type": "json"
         }
       ]
