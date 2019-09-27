@@ -244,7 +244,7 @@ router.get('/', restricted, (req, res) =>
  * 
  */
 
-router.post('/description', restricted, (req, res) =>
+router.post('/description',cors(), restricted, (req, res) =>
 {
     if(!req.body.description)
     {
