@@ -379,8 +379,10 @@ router.post('/book', restricted, (req, res) =>
     "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiParam {Integer} bookId The id of the book you want to delete as
+ * @apiParam {Integer} bookId The id of the book you want to delete as a param on the url
  * 
+ * @apiParamExample {URL} Book-Delete-Example:
+ * https://better-reads-bw.herokuapp.com/api/user/book/7
  * 
  * @apiSuccess (200) {String} Success A message about deleting the book from the user
  * 
@@ -547,7 +549,7 @@ router.put('/book', restricted, (req, res) =>
 })
 
 /**
- * @api {delete} /api/user/description Delete Description
+ * @api {delete} /api/user/description/:id Delete Description
  * @apiName DeleteDescription
  * @apiGroup User
  * 
@@ -559,12 +561,11 @@ router.put('/book', restricted, (req, res) =>
     "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiParam {Integer} descriptionId The id of the description you want to delete
+ * @apiParam {Integer} descriptionId The id of the descriptioon you want to delete as a param on the url
  * 
- * @apiParamExample {json} Description-Delete-Example:
- * {
- *  "descriptionId": 8
- * }
+ * @apiParamExample {URL} Book-Delete-Example:
+ * https://better-reads-bw.herokuapp.com/api/user/book/7
+ * 
  * 
  * @apiSuccess (200) {String} Success A message about deleting the description from the user
  * 
