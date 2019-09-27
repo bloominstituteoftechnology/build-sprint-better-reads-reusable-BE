@@ -615,16 +615,16 @@ router.put('/book', restricted, (req, res) =>
 
 router.delete('/description/:id', restricted, (req, res) =>
 {
-    if(!req.params.descriptionId)
+    if(!req.params.id)
     {
-        res.status(400).json({ errorMessage: "requires a descriptionId" })
+        res.status(400).json({ errorMessage: "requires a description id param" })
     }
     else
     {
         Auth.findBy({username: req.user.username})
         .then(response =>
             {
-                Users.removeDescByUserId(response[0].id, req.params.descriptionId)
+                Users.removeDescByUserId(response[0].id, req.params.id)
                 .then(descResponse =>
                     {
                         res.status(descResponse.code).json({message: descResponse.message})
