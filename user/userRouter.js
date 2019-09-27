@@ -561,10 +561,10 @@ router.put('/book', restricted, (req, res) =>
     "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiParam {Integer} descriptionId The id of the descriptioon you want to delete as a param on the url
+ * @apiParam {Integer} descriptionId The id of the description you want to delete as a param on the url
  * 
- * @apiParamExample {URL} Book-Delete-Example:
- * https://better-reads-bw.herokuapp.com/api/user/book/7
+ * @apiParamExample {URL} Description-Delete-Example:
+ * https://better-reads-bw.herokuapp.com/api/user/description/7
  * 
  * 
  * @apiSuccess (200) {String} Success A message about deleting the description from the user
