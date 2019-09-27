@@ -345,7 +345,7 @@ router.post('/book', restricted, (req, res) =>
 {
     if(!req.body.bookId)
     {
-        res.status(400).json({ errorMessage: "requires a bookId" })
+        res.status(400).json({ errorMessage: "requires a bookId", incReq: req.body})
     }
     else
     {
