@@ -3,6 +3,7 @@ const Users = require('./userModel')
 const Auth = require('../auth/authModel')
 const restricted = require('../utils/restricted')
 const cors = require('cors')
+const axios = require('axios')
 
 router.use(cors())
 
@@ -252,26 +253,30 @@ router.post('/description', restricted, (req, res) =>
     else
     {
         //TODO: replace this with call to DS
-        Users.randomBooks()
+        axios.post('http://better-reads-jay.herokuapp.com/api/description', req.body)
             .then(response =>
                 {   
-                    let books = response
-                    Auth.findBy({username: req.user.username}).first()
-                    .then(user =>
+                    let books = response.data
+                    parseDataResult(books)
+                    .then(bookList =>
                         {
-                            Users.addUserDescWithBookResults(req.body.description, books, user.id)
-                            .then(response =>
+                            Auth.findBy({username: req.user.username}).first()
+                            .then(user =>
                                 {
-                                    res.status(200).json({description: req.body.description, books: books})
+                                    Users.addUserDescWithBookResults(req.body.description, bookList, user.id)
+                                    .then(response =>
+                                        {
+                                            res.status(200).json({description: req.body.description, books: bookList})
+                                        })
+                                    .catch(err =>
+                                        {
+                                            res.status(500).json({ errorMessage: `Internal Error: Could not search for books a` })
+                                        })
                                 })
                             .catch(err =>
                                 {
-                                    res.status(500).json({ errorMessage: `Internal Error: Could not search for books` })
+                                    res.status(500)
                                 })
-                        })
-                    .catch(err =>
-                        {
-                            res.status(500)
                         })
                 })
             .catch(error =>
@@ -280,6 +285,26 @@ router.post('/description', restricted, (req, res) =>
                 })
     }
 })
+
+async function parseDataResult(data)
+{
+    let bookList = []
+
+    for(let i=0; i<data.length; i++)
+    {
+        let book = 
+        {
+            title: data[i][0],
+            authors: data[i][1],
+            rating: data[i][2],
+            ISBN: data[i][3] || null
+        }
+        let bookId = await Users.addBook(book)
+        book.id = bookId
+        bookList.push(book)
+    }
+    return bookList
+}
 
 /**
  * @api {post} /api/user/book Save Book
