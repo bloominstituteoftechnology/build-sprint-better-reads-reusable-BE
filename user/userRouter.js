@@ -367,7 +367,7 @@ router.post('/book', restricted, (req, res) =>
 })
 
 /**
- * @api {delete} /api/user/book Delete Book
+ * @api {delete} /api/user/book/:id Delete Book
  * @apiName DeleteBook
  * @apiGroup User
  * 
@@ -379,12 +379,8 @@ router.post('/book', restricted, (req, res) =>
     "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiParam {Integer} bookId The id of the book you want to delete
+ * @apiParam {Integer} bookId The id of the book you want to delete as
  * 
- * @apiParamExample {json} Book-Delete-Example:
- * {
- *  "bookId": 6
- * }
  * 
  * @apiSuccess (200) {String} Success A message about deleting the book from the user
  * 
@@ -616,9 +612,9 @@ router.put('/book', restricted, (req, res) =>
  * 
  */
 
-router.delete('/description', restricted, (req, res) =>
+router.delete('/description/:id', restricted, (req, res) =>
 {
-    if(!req.body.descriptionId)
+    if(!req.params.descriptionId)
     {
         res.status(400).json({ errorMessage: "requires a descriptionId" })
     }
@@ -627,7 +623,7 @@ router.delete('/description', restricted, (req, res) =>
         Auth.findBy({username: req.user.username})
         .then(response =>
             {
-                Users.removeDescByUserId(response[0].id, req.body.descriptionId)
+                Users.removeDescByUserId(response[0].id, req.params.descriptionId)
                 .then(descResponse =>
                     {
                         res.status(descResponse.code).json({message: descResponse.message})
