@@ -1,8 +1,7 @@
 # Better Reads Back-End: A node-express server for the Better Reads App
 
-## Will post deployed site here
+## Back-End API Docs: https://better-reads-bw.herokuapp.com/api/docs/
 
-Use AJAX calls with an authentication token (or not, if logging in or registering)
+## Landing Page: https://condescending-torvalds-559a00.netlify.com
 
-The api documentation can be found here: https://better-reads-bw.herokuapp.com/api/docs/
-
+## Web App: https://betterreads.now.sh
